@@ -4,24 +4,27 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Models\ElectionPeriod;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * Define the application's command schedule.
-     */
-    protected function schedule(Schedule $schedule): void
+    protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Check and update election statuses every minute
+        $schedule->call(function () {
+            $elections = ElectionPeriod::where('is_active', true)->get();
+            
+            foreach ($elections as $election) {
+                if ($election->hasEnded()) {
+                    $election->update(['is_active' => false]);
+                }
+            }
+        })->everyMinute();
     }
 
-    /**
-     * Register the commands for the application.
-     */
-    protected function commands(): void
+    protected function commands()
     {
         $this->load(__DIR__.'/Commands');
-
         require base_path('routes/console.php');
     }
 }
