@@ -7,12 +7,28 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Response;
 
 class LoginController extends Controller
 {
     public function showLoginForm()
     {
-        return view('student.auth.login');
+        // Clear any existing session data when showing login form
+        if (Auth::guard('student')->check()) {
+            Auth::guard('student')->logout();
+            Session::flush();
+        }
+        
+        $response = Response::make(view('student.auth.login'));
+        
+        // Set headers to prevent caching
+        $response->header('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+        $response->header('Pragma', 'no-cache');
+        $response->header('Expires', 'Fri, 01 Jan 1990 00:00:00 GMT');
+        $response->header('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT');
+        
+        return $response;
     }
 
     public function login(Request $request)
@@ -46,8 +62,24 @@ class LoginController extends Controller
                 'registration_number' => $credentials['registration_number']
             ]);
             
+            // Regenerate session and mark as authenticated
             $request->session()->regenerate();
-            return redirect()->intended(route('student.dashboard'));
+            $request->session()->put('authenticated', true);
+            $request->session()->put('last_activity', time());
+            
+            Log::info('Login successful, redirecting to dashboard');
+            
+            // Clear any previous session data
+            $request->session()->forget('logout_timestamp');
+            
+            // Redirect with cache control headers
+            return redirect()->intended(route('student.dashboard'))
+                ->withHeaders([
+                    'Cache-Control' => 'no-cache, no-store, must-revalidate, max-age=0',
+                    'Pragma' => 'no-cache',
+                    'Expires' => 'Fri, 01 Jan 1990 00:00:00 GMT',
+                    'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT',
+                ]);
         }
 
         // METHOD 2: If Auth::attempt fails, do detailed debugging
@@ -112,8 +144,19 @@ class LoginController extends Controller
 
             if (Auth::guard('student')->check()) {
                 $request->session()->regenerate();
+                $request->session()->put('authenticated', true);
+                $request->session()->put('last_activity', time());
+                $request->session()->forget('logout_timestamp');
+                
                 Log::info('Login SUCCESSFUL - Redirecting to dashboard');
-                return redirect()->intended(route('student.dashboard'));
+                
+                return redirect()->intended(route('student.dashboard'))
+                    ->withHeaders([
+                        'Cache-Control' => 'no-cache, no-store, must-revalidate, max-age=0',
+                        'Pragma' => 'no-cache',
+                        'Expires' => 'Fri, 01 Jan 1990 00:00:00 GMT',
+                        'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT',
+                    ]);
             } else {
                 Log::error('Manual login failed - user not authenticated after login');
                 return back()->withErrors([
@@ -137,13 +180,40 @@ class LoginController extends Controller
     {
         $studentId = Auth::guard('student')->id();
         
+        Log::info('Student logout initiated', ['student_id' => $studentId]);
+        
+        // Store logout timestamp
+        $request->session()->put('logout_timestamp', time());
+        
+        // Clear all authentication data
         Auth::guard('student')->logout();
-
+        
+        // Clear all session data
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        
+        // Clear any session cookies
+        $request->session()->flush();
+        Session::flush();
+        
+        // Clear session cookie
+        $cookie = \Illuminate\Support\Facades\Cookie::forget('university_voting_portal_session');
+        $xsrfCookie = \Illuminate\Support\Facades\Cookie::forget('XSRF-TOKEN');
+        
+        Log::info('Student logged out successfully', ['student_id' => $studentId]);
 
-        Log::info('Student logged out', ['student_id' => $studentId]);
-
-        return redirect()->route('student.login');
+        // Create a response with strong cache control headers
+        $response = redirect()->route('student.login')
+            ->withHeaders([
+                'Cache-Control' => 'no-cache, no-store, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache',
+                'Expires' => 'Fri, 01 Jan 1990 00:00:00 GMT',
+                'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT',
+            ]);
+            
+        // Clear cookies
+        $response->withCookie($cookie)->withCookie($xsrfCookie);
+        
+        return $response;
     }
 }

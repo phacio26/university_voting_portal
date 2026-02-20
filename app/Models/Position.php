@@ -35,6 +35,11 @@ class Position extends Model
         return $this->hasMany(Vote::class);
     }
 
+    public function electionPeriods()
+    {
+        return $this->belongsToMany(ElectionPeriod::class, 'election_period_positions');
+    }
+
     public function getVoteCount($electionPeriodId)
     {
         return $this->votes()->where('election_period_id', $electionPeriodId)->count();

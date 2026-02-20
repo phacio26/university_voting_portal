@@ -2,8 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <!-- Disable favicon completely -->
+    <link rel="icon" href="/favicon.png?v=2">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'University Voting Portal')</title>
+    <title>Vote - Student Dashboard</title>
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -26,7 +30,7 @@
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <p class="mt-3">Loading University Voting Portal...</p>
+            <p class="mt-3">Loading Vote Project...</p>
         </div>
     </div>
 
@@ -43,7 +47,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
-                        <p>&copy; {{ date('Y') }} University Voting Portal. All rights reserved.</p>
+                        <p>&copy; {{ date('Y') }} Vote Project. All rights reserved.</p>
                     </div>
                     <div class="col-md-6 text-end">
                         <p>Secure • Transparent • Democratic</p>
@@ -62,3 +66,5 @@
     @yield('scripts')
 </body>
 </html>
+
+

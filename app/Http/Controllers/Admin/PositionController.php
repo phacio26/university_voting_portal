@@ -3,14 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Candidate;
 use App\Models\Position;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PositionController extends Controller
 {
     public function index()
     {
-        $positions = Position::orderBy('order')->get();
+        $positions = Position::withCount('candidates')
+            ->orderBy('order')
+            ->get();
         return view('admin.positions.index', compact('positions'));
     }
 
@@ -54,11 +59,21 @@ class PositionController extends Controller
 
     public function destroy(Position $position)
     {
-        if ($position->candidates()->exists()) {
-            return redirect()->back()->with('error', 'Cannot delete position with candidates. Please remove candidates first.');
-        }
+        DB::transaction(function () use ($position) {
+            $candidatePhotos = Candidate::where('position_id', $position->id)
+                ->whereNotNull('photo')
+                ->pluck('photo');
 
-        $position->delete();
+            if ($candidatePhotos->isNotEmpty()) {
+                foreach ($candidatePhotos as $photo) {
+                    Storage::disk('public')->delete($photo);
+                }
+            }
+
+            Candidate::where('position_id', $position->id)->delete();
+            $position->delete();
+        });
+
         return redirect()->route('admin.positions.index')
             ->with('success', 'Position deleted successfully.');
     }

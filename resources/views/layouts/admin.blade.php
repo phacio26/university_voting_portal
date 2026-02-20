@@ -23,6 +23,14 @@
     @yield('styles')
 </head>
 <body class="admin-body">
+    <div id="pageNavLoader" class="page-nav-loader" aria-hidden="true">
+        <div class="page-nav-loader__bar"></div>
+        <div class="page-nav-loader__label">
+            <i class="fas fa-circle-notch fa-spin"></i>
+            <span>Loading page...</span>
+        </div>
+    </div>
+
     <div class="admin-container">
         <!-- Sidebar -->
         <nav class="admin-sidebar" id="adminSidebar">
@@ -62,21 +70,24 @@
                         <span>Candidates</span>
                     </a>
                 </li>
-                <li class="nav-divider"></li>
                 <li class="nav-item">
-                    <a class="nav-link text-danger" href="{{ route('admin.logout') }}">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
+                    <a class="nav-link {{ request()->routeIs('admin.results.*') ? 'active' : '' }}"
+                       href="{{ route('admin.results.index') }}">
+                        <i class="fas fa-trophy"></i>
+                        <span>Results</span>
                     </a>
                 </li>
+                <li class="nav-divider"></li>
+                <li class="nav-item">
+                    <form method="POST" action="{{ route('admin.logout') }}" class="m-0">
+                        @csrf
+                        <button type="submit" class="nav-link text-danger">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </li>
             </ul>
-            
-            <div class="sidebar-footer">
-                <small class="text-muted">
-                    <i class="fas fa-user me-1"></i>
-                    {{ Auth::guard('admin')->user()->name }}
-                </small>
-            </div>
         </nav>
 
         <!-- Main Content -->
@@ -85,8 +96,8 @@
             <header class="admin-topbar">
                 <div class="container-fluid">
                     <div class="row align-items-center">
-                        <div class="col">
-                            <button class="mobile-menu-toggle me-3" id="mobileMenuToggle">
+                        <div class="col-12 col-lg">
+                            <button class="mobile-menu-toggle me-3" id="mobileMenuToggle" type="button" aria-label="Toggle navigation menu">
                                 <i class="fas fa-bars"></i>
                             </button>
                             <h4 class="page-title mb-0 d-inline-block">
@@ -94,11 +105,14 @@
                                 @yield('page-title', 'Dashboard')
                             </h4>
                         </div>
-                        <div class="col-auto">
+                        <div class="col-12 col-lg-auto">
                             <div class="topbar-info">
                                 <i class="fas fa-clock me-1"></i>
                                 <span id="current-time"></span>
                                 <small class="text-muted ms-1">(Malawi Time)</small>
+                                <span class="mx-2">|</span>
+                                <i class="fas fa-user me-1"></i>
+                                <span>{{ Auth::guard('admin')->user()->name }}</span>
                             </div>
                         </div>
                     </div>
@@ -186,6 +200,44 @@
                 }, 5000);
             });
         });
+
+        (function () {
+            const loader = document.getElementById('pageNavLoader');
+            if (!loader) return;
+
+            let hideFallbackTimer = null;
+            const showLoader = () => {
+                loader.classList.add('is-visible');
+                if (hideFallbackTimer) clearTimeout(hideFallbackTimer);
+                hideFallbackTimer = setTimeout(() => loader.classList.remove('is-visible'), 4000);
+            };
+            const hideLoader = () => loader.classList.remove('is-visible');
+
+            window.addEventListener('beforeunload', showLoader);
+            window.addEventListener('pageshow', hideLoader);
+
+            document.addEventListener('click', (event) => {
+                const anchor = event.target.closest('a');
+                if (!anchor) return;
+                const href = anchor.getAttribute('href');
+                if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+                if (anchor.target && anchor.target !== '_self') return;
+                if (anchor.hasAttribute('download')) return;
+                showLoader();
+            });
+
+            document.addEventListener('submit', (event) => {
+                const form = event.target;
+                if (!(form instanceof HTMLFormElement)) return;
+                if (form.dataset.ajax === 'true' || form.classList.contains('js-no-nav-loader')) return;
+                if (form.target && form.target !== '_self') return;
+                setTimeout(() => {
+                    if (!event.defaultPrevented) {
+                        showLoader();
+                    }
+                }, 0);
+            });
+        })();
     </script>
     
     @yield('scripts')

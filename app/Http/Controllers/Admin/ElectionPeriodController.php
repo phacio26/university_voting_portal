@@ -32,6 +32,10 @@ class ElectionPeriodController extends Controller
         // Convert to Malawi time
         $startTime = Carbon::parse($request->start_time, 'Africa/Blantyre');
         $endTime = Carbon::parse($request->end_time, 'Africa/Blantyre');
+        $now = Carbon::now('Africa/Blantyre');
+
+        // Ensure any ended elections are finalized for history
+        ElectionPeriod::finalizeEndedElections($now);
 
         ElectionPeriod::create([
             'title' => $request->title,
@@ -60,6 +64,10 @@ class ElectionPeriodController extends Controller
 
         $startTime = Carbon::parse($request->start_time, 'Africa/Blantyre');
         $endTime = Carbon::parse($request->end_time, 'Africa/Blantyre');
+        $now = Carbon::now('Africa/Blantyre');
+
+        // Ensure any ended elections are finalized for history
+        ElectionPeriod::finalizeEndedElections($now);
 
         $electionPeriod->update([
             'title' => $request->title,
@@ -97,6 +105,14 @@ class ElectionPeriodController extends Controller
 
     public function makeResultsAvailable(ElectionPeriod $electionPeriod)
     {
+        if ($electionPeriod->is_revote) {
+            return redirect()->back()->with('error', 'Re-vote periods are published through their parent election only.');
+        }
+
+        if (ElectionPeriod::rootHasPendingRevoteOrTie($electionPeriod, Carbon::now('Africa/Blantyre'))) {
+            return redirect()->back()->with('error', 'Cannot publish yet. Tie resolution/re-vote is still pending.');
+        }
+
         $electionPeriod->update(['results_available' => true]);
         return redirect()->back()->with('success', 'Results made available to students.');
     }

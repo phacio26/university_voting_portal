@@ -28,7 +28,7 @@ class CandidateController extends Controller
             'name' => 'required|string|max:255',
             'bio' => 'nullable|string',
             'position_id' => 'required|exists:positions,id',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072|dimensions:min_width=300,min_height=300,max_width=4000,max_height=4000',
         ]);
 
         $data = $request->only(['name', 'bio', 'position_id']);
@@ -55,7 +55,7 @@ class CandidateController extends Controller
             'name' => 'required|string|max:255',
             'bio' => 'nullable|string',
             'position_id' => 'required|exists:positions,id',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072|dimensions:min_width=300,min_height=300,max_width=4000,max_height=4000',
         ]);
 
         $data = $request->only(['name', 'bio', 'position_id']);
