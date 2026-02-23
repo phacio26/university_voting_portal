@@ -55,7 +55,12 @@
                     <div class="row g-2 mb-3">
                         <div class="col-6 col-md-3"><div class="portal-card p-2 text-center"><small class="d-block text-muted">Positions</small><strong>{{ $positions->count() }}</strong></div></div>
                         <div class="col-6 col-md-3"><div class="portal-card p-2 text-center"><small class="d-block text-muted">Votes</small><strong>{{ number_format($item['total_votes']) }}</strong></div></div>
-                        <div class="col-6 col-md-3"><div class="portal-card p-2 text-center"><small class="d-block text-muted">Turnout</small><strong>{{ number_format($item['voter_turnout'], 1) }}%</strong></div></div>
+                        <div class="col-6 col-md-3">
+                            <div class="portal-card p-2 text-center">
+                                <small class="d-block text-muted">Turnout</small>
+                                <strong>{{ (int) $item['total_votes'] === 0 ? 'No turnout yet' : number_format($item['voter_turnout'], 1) . '%' }}</strong>
+                            </div>
+                        </div>
                         <div class="col-6 col-md-3"><div class="portal-card p-2 text-center"><small class="d-block text-muted">Registered</small><strong>{{ number_format($totalStudents) }}</strong></div></div>
                     </div>
 
@@ -104,11 +109,11 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Delete History Result</h5>
+                <h5 class="modal-title">Remove History Record</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p class="mb-2">Are you sure you want to delete this history result?</p>
+                <p class="mb-2">Are you sure you want to remove this election from your history?</p>
                 <p class="small text-muted mb-0" id="historyDeleteLabel"></p>
             </div>
             <div class="modal-footer">

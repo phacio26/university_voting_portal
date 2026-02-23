@@ -27,7 +27,7 @@ class VotingController extends Controller
 
         if (!$activeElection) {
             return redirect()->route('student.dashboard')
-                ->with('error', 'No active election period found.');
+                ->with('error', 'There is no active election right now.');
         }
 
         // Check if student has already voted
@@ -44,10 +44,10 @@ class VotingController extends Controller
         if (!$activeElection->isVotingOpen()) {
             if (now()->lt($activeElection->start_time)) {
                 return redirect()->route('student.dashboard')
-                    ->with('warning', 'Voting will start on ' . $activeElection->start_time->format('M d, Y h:i A'));
+                    ->with('warning', 'Voting opens on ' . $activeElection->start_time->format('M d, Y h:i A'));
             } else {
                 return redirect()->route('student.dashboard')
-                    ->with('error', 'Voting period has ended.');
+                    ->with('error', 'Voting has ended for this election.');
             }
         }
 
@@ -62,7 +62,7 @@ class VotingController extends Controller
 
         if (!$activeElection || !$activeElection->isVotingOpen()) {
             return redirect()->route('student.dashboard')
-                ->with('error', 'Voting period is not active.');
+                ->with('error', 'Voting is not open at the moment.');
         }
 
         // Check if student has already voted
@@ -80,7 +80,7 @@ class VotingController extends Controller
 
         if ($positions->isEmpty()) {
             return redirect()->route('student.dashboard')
-                ->with('error', 'No positions available for voting.');
+                ->with('error', 'No positions are available for this vote.');
         }
 
         $votes = Session::get('votes', []);
@@ -130,7 +130,7 @@ class VotingController extends Controller
         if (!$activeElection || !$activeElection->isVotingOpen()) {
             Session::forget('voting_session');
             return redirect()->route('student.dashboard')
-                ->with('error', 'Voting period has ended.');
+                ->with('error', 'Voting has ended for this election.');
         }
 
         // Ensure position is part of this election
@@ -170,7 +170,7 @@ class VotingController extends Controller
     {
         // Check if voting session is active
         if (!Session::get('voting_session')) {
-            return response()->json(['error' => 'Voting session expired. Please start again.'], 400);
+            return response()->json(['error' => 'Your voting session expired. Please start again.'], 400);
         }
 
         $request->validate([
@@ -194,7 +194,7 @@ class VotingController extends Controller
         // Validate voting period
         if (!$activeElection || !$activeElection->isVotingOpen()) {
             Session::forget('voting_session');
-            return response()->json(['error' => 'Voting period has ended.'], 400);
+            return response()->json(['error' => 'Voting has ended for this election.'], 400);
         }
 
         // Store vote in session
@@ -241,7 +241,7 @@ class VotingController extends Controller
         $activeElection = ElectionPeriod::where('is_active', true)->first();
         if (!$activeElection) {
             return redirect()->route('student.dashboard')
-                ->with('error', 'No active election period found.');
+                ->with('error', 'There is no active election right now.');
         }
 
         $positions = $this->getElectionPositions($activeElection)->load([
@@ -280,7 +280,7 @@ class VotingController extends Controller
         
         if (count($votes) !== $positions->count()) {
             return redirect()->route('student.voting.start')
-                ->with('error', 'Please vote for all positions before submitting.');
+                ->with('error', 'Please complete all positions before submitting your vote.');
         }
 
         $student = Auth::guard('student')->user();
@@ -288,7 +288,7 @@ class VotingController extends Controller
         if (!$activeElection || !$activeElection->isVotingOpen()) {
             Session::forget(['voting_session', 'votes', 'current_position_index']);
             return redirect()->route('student.dashboard')
-                ->with('error', 'Voting period is no longer active.');
+                ->with('error', 'Voting is no longer open.');
         }
 
         // Check if student has already voted in database
@@ -341,7 +341,7 @@ class VotingController extends Controller
         Session::forget(['voting_session', 'votes', 'current_position_index']);
 
         return redirect()->route('student.dashboard')
-            ->with('success', 'Vote submitted. Your ballot has been recorded successfully.');
+            ->with('success', 'Vote submitted. Your vote has been recorded.');
     }
 
     public function cancelVotingSession()
@@ -352,7 +352,7 @@ class VotingController extends Controller
         Session::forget('current_position_index');
 
         return redirect()->route('student.dashboard')
-            ->with('info', 'Voting session cancelled.');
+            ->with('info', 'Voting session canceled.');
     }
 
     // You can keep your original vote method as an alternative API endpoint
@@ -362,7 +362,7 @@ class VotingController extends Controller
         $activeElection = ElectionPeriod::where('is_active', true)->first();
 
         if (!$activeElection || !$activeElection->isVotingOpen()) {
-            return response()->json(['error' => 'Voting period has ended.'], 400);
+            return response()->json(['error' => 'Voting has ended for this election.'], 400);
         }
 
         if ($student->hasVotedInPeriod($activeElection->id)) {
@@ -415,3 +415,4 @@ class VotingController extends Controller
         return Position::where('is_active', true)->orderBy('order')->get();
     }
 }
+

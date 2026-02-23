@@ -36,6 +36,17 @@
         height: 4px;
         background: linear-gradient(90deg, var(--portal-brand), var(--portal-brand-2));
     }
+
+    .candidate-choice.validation-error {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.16);
+        background: #fff7f8;
+    }
+
+    .vote-required-hint {
+        margin-top: -0.25rem;
+        margin-bottom: 0.75rem;
+    }
     
     .candidate-info h2 {
         font-size: 1.35rem;
@@ -57,18 +68,29 @@
     }
     
     .avatar-img {
-        width: 110px;
-        height: 110px;
+        display: block;
+        width: 96px;
+        height: 96px;
+        min-width: 96px;
+        min-height: 96px;
+        aspect-ratio: 1 / 1;
         border-radius: 16px;
         object-fit: cover;
+        object-position: center 30%;
         border: 3px solid var(--portal-border);
+        background: #eef3f9;
+        box-shadow: 0 2px 10px rgba(15, 23, 42, 0.10);
+        image-rendering: auto;
     }
     
     .avatar-fallback {
-        width: 110px;
-        height: 110px;
-        border-radius: 16px;
         display: inline-flex;
+        width: 96px;
+        height: 96px;
+        min-width: 96px;
+        min-height: 96px;
+        aspect-ratio: 1 / 1;
+        border-radius: 16px;
         align-items: center;
         justify-content: center;
         background: linear-gradient(135deg, #e6eef8, #dbe7f5);
@@ -76,6 +98,26 @@
         font-weight: 800;
         font-size: 2.5rem;
         border: 3px solid var(--portal-border);
+    }
+
+    @media (min-width: 992px) {
+        .candidate-choice .d-flex {
+            align-items: center !important;
+        }
+
+        .avatar-img,
+        .avatar-fallback {
+            width: 112px;
+            height: 132px;
+            min-width: 112px;
+            min-height: 132px;
+            border-radius: 14px;
+            aspect-ratio: 112 / 132;
+        }
+
+        .avatar-img {
+            object-position: center 26%;
+        }
     }
 
     @media (max-width: 576px) {
@@ -144,7 +186,12 @@
 @php
     $totalPositions = $positions->count();
     $currentPosition = $currentPositionIndex + 1;
-    $progressPercentage = ($currentPosition / max($totalPositions, 1)) * 100;
+    $sessionVotes = session('votes', []);
+    $positionIds = $positions->pluck('id')->all();
+    $completedCount = collect($positionIds)->filter(function ($id) use ($sessionVotes) {
+        return array_key_exists($id, $sessionVotes);
+    })->count();
+    $progressPercentage = ($completedCount / max($totalPositions, 1)) * 100;
 @endphp
 
 <div class="portal-card p-3 p-md-4 mb-3">
@@ -165,7 +212,7 @@
 <div class="portal-card p-3 p-md-4">
     @if($hasVotedForPosition)
         <div class="alert alert-success">
-            Selection saved for this position. You can update it before final submission.
+            Your choice for this position is saved. You can still update it before submitting.
         </div>
     @endif
 
@@ -174,6 +221,9 @@
     @else
         <form id="voteForm" method="POST" action="{{ route('student.voting.vote.position', $position) }}">
             @csrf
+            <div id="voteRequiredHint" class="alert alert-danger d-none vote-required-hint" role="alert">
+                Please select one candidate to continue.
+            </div>
             <div class="row g-4 mb-4">
                 @foreach($candidates as $candidate)
                     <div class="col-md-6">
@@ -194,8 +244,7 @@
                                                     name="candidate_id"
                                                     id="candidate_{{ $candidate->id }}"
                                                     value="{{ $candidate->id }}"
-                                                    {{ (int) $selectedCandidateId === (int) $candidate->id ? 'checked' : '' }}
-                                                    required>
+                                                    {{ (int) $selectedCandidateId === (int) $candidate->id ? 'checked' : '' }}>
                                             </div>
                                         </div>
                                         @if($candidate->bio)
@@ -228,7 +277,12 @@
 <script>
     document.querySelectorAll('.candidate-radio').forEach((radio) => {
         radio.addEventListener('change', () => {
+            const voteRequiredHint = document.getElementById('voteRequiredHint');
             document.querySelectorAll('.candidate-choice').forEach((card) => card.classList.remove('selected'));
+            document.querySelectorAll('.candidate-choice').forEach((card) => card.classList.remove('validation-error'));
+            if (voteRequiredHint) {
+                voteRequiredHint.classList.add('d-none');
+            }
             radio.closest('.candidate-choice').classList.add('selected');
         });
     });
@@ -238,8 +292,14 @@
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
             const selected = form.querySelector('input[name="candidate_id"]:checked');
+            const voteRequiredHint = document.getElementById('voteRequiredHint');
             if (!selected) {
-                alert('Please select a candidate before continuing.');
+                document.querySelectorAll('.candidate-choice').forEach((card) => {
+                    card.classList.add('validation-error');
+                });
+                if (voteRequiredHint) {
+                    voteRequiredHint.classList.remove('d-none');
+                }
                 return;
             }
 
@@ -265,9 +325,9 @@
                     return;
                 }
 
-                alert(data.error || 'Unable to save your vote.');
+                alert(data.error || 'Could not save your choice right now.');
             } catch (error) {
-                alert('Network error. Please try again.');
+                alert('Connection issue. Please try again.');
             }
 
             voteButton.disabled = false;

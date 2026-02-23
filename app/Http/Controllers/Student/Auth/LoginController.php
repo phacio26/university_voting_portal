@@ -89,8 +89,7 @@ class LoginController extends Controller
 
         if (!$student) {
             Log::error('Student not found in database', [
-                'registration_number' => $request->registration_number,
-                'all_students_count' => \App\Models\Student::count()
+                'registration_number' => $request->registration_number
             ]);
             
             return back()->withErrors([
@@ -121,9 +120,7 @@ class LoginController extends Controller
 
         if (!$passwordValid) {
             Log::warning('Password mismatch', [
-                'student_id' => $student->id,
-                'provided_password' => $request->password,
-                'stored_hash' => $student->password
+                'student_id' => $student->id
             ]);
             
             return back()->withErrors([
@@ -160,7 +157,7 @@ class LoginController extends Controller
             } else {
                 Log::error('Manual login failed - user not authenticated after login');
                 return back()->withErrors([
-                    'registration_number' => 'Authentication failed. Please try again.',
+                    'registration_number' => 'We could not sign you in. Please try again.',
                 ])->withInput();
             }
             
@@ -171,7 +168,7 @@ class LoginController extends Controller
             ]);
             
             return back()->withErrors([
-                'registration_number' => 'Login error: ' . $e->getMessage(),
+                'registration_number' => 'We could not sign you in right now. Please try again.',
             ])->withInput();
         }
     }

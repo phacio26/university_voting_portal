@@ -39,7 +39,7 @@
                 @error('order')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
-                <div class="form-text">Lower numbers appear earlier in the ballot.</div>
+                <div class="form-text">Lower numbers appear earlier in the voting list.</div>
             </div>
 
             <div class="d-flex justify-content-end gap-2 flex-wrap">

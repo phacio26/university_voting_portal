@@ -24,21 +24,20 @@ Route::get('/', function () {
 Route::prefix('student')->name('student.')->group(function () {
     Route::middleware('guest:student')->group(function () {
         Route::get('/login', [StudentLoginController::class, 'showLoginForm'])->name('login');
-        Route::post('/login', [StudentLoginController::class, 'login']);
+        Route::post('/login', [StudentLoginController::class, 'login'])->middleware('throttle:10,1');
         Route::get('/register', [StudentRegisterController::class, 'showRegistrationForm'])->name('register');
-        Route::post('/register', [StudentRegisterController::class, 'register']);
+        Route::post('/register', [StudentRegisterController::class, 'register'])->middleware('throttle:10,1');
         Route::get('/forgot-password', [StudentForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-        Route::post('/forgot-password', [StudentForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+        Route::post('/forgot-password', [StudentForgotPasswordController::class, 'sendResetLinkEmail'])->middleware('throttle:5,1')->name('password.email');
         Route::get('/reset-password/{token}', [StudentResetPasswordController::class, 'showResetForm'])->name('password.reset');
-        Route::post('/reset-password', [StudentResetPasswordController::class, 'reset'])->name('password.update');
+        Route::post('/reset-password', [StudentResetPasswordController::class, 'reset'])->middleware('throttle:5,1')->name('password.update');
     });
 
-    Route::middleware('student.auth')->group(function () {
+    Route::middleware(['student.auth', 'no.cache'])->group(function () {
         Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
         Route::get('/voting/status', [StudentDashboardController::class, 'votingStatus'])->name('voting.status');
 
         Route::post('/logout', [StudentLoginController::class, 'logout'])->name('logout');
-        Route::get('/logout', [StudentLoginController::class, 'logout']);
 
         Route::prefix('voting')->name('voting.')->group(function () {
             Route::get('/', [VotingController::class, 'index'])->name('index');
@@ -68,20 +67,19 @@ Route::prefix('student')->name('student.')->group(function () {
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest:admin')->group(function () {
         Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('login');
-        Route::post('/login', [AdminLoginController::class, 'login']);
+        Route::post('/login', [AdminLoginController::class, 'login'])->middleware('throttle:10,1');
         Route::get('/forgot-password', [AdminForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-        Route::post('/forgot-password', [AdminForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+        Route::post('/forgot-password', [AdminForgotPasswordController::class, 'sendResetLinkEmail'])->middleware('throttle:5,1')->name('password.email');
         Route::get('/reset-password/{token}', [AdminResetPasswordController::class, 'showResetForm'])->name('password.reset');
-        Route::post('/reset-password', [AdminResetPasswordController::class, 'reset'])->name('password.update');
+        Route::post('/reset-password', [AdminResetPasswordController::class, 'reset'])->middleware('throttle:5,1')->name('password.update');
     });
 
-    Route::middleware('admin.auth')->group(function () {
+    Route::middleware(['admin.auth', 'no.cache'])->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::get('/stats', [AdminDashboardController::class, 'getVotingStats'])->name('stats');
         Route::get('/live-status', [AdminDashboardController::class, 'getLiveStatus'])->name('live-status');
 
         Route::post('/logout', [AdminLoginController::class, 'logout'])->name('logout');
-        Route::get('/logout', [AdminLoginController::class, 'logout']);
 
         Route::resource('election-periods', ElectionPeriodController::class)->except(['show']);
         Route::post('/election-periods/{electionPeriod}/activate', [ElectionPeriodController::class, 'activate'])

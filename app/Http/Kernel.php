@@ -64,6 +64,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'student.auth' => \App\Http\Middleware\StudentAuth::class,
         'admin.auth' => \App\Http\Middleware\AdminAuth::class,
+        'no.cache' => \App\Http\Middleware\NoCacheHeaders::class,
         'voting.period' => \App\Http\Middleware\VotingPeriod::class,
     ];
 }

@@ -62,7 +62,7 @@
     <div class="col-md-4">
         <div class="result-card p-3 text-center">
             <small class="text-muted d-block">Turnout</small>
-            <strong>{{ $studentsCount > 0 ? number_format(($totalBallots / $studentsCount) * 100, 1) : '0.0' }}%</strong>
+            <strong>{{ (int) $totalBallots === 0 ? 'No turnout yet' : ($studentsCount > 0 ? number_format(($totalBallots / $studentsCount) * 100, 1) . '%' : '0.0%') }}</strong>
         </div>
     </div>
 </div>

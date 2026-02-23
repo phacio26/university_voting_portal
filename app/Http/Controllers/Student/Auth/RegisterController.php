@@ -45,11 +45,11 @@ class RegisterController extends Controller
             ]);
 
             return redirect()->route('student.login')
-                ->with('success', 'Registration successful! Please login with your credentials.');
+                ->with('success', 'Registration successful. Please log in with your credentials.');
 
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Registration failed. Please try again.')
+                ->with('error', 'Registration could not be completed. Please try again.')
                 ->withInput();
         }
     }

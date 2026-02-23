@@ -156,7 +156,7 @@ class ResultsController extends Controller
     public function destroyHistory(Request $request, ElectionPeriod $election)
     {
         if ($election->end_time->gte(now())) {
-            return back()->with('error', 'Only completed election history can be deleted.');
+            return back()->with('error', 'Only completed election records can be removed.');
         }
 
         $student = Auth::guard('student')->user();
@@ -173,7 +173,7 @@ class ResultsController extends Controller
             ]
         );
 
-        return back()->with('success', 'History result hidden from your account.');
+        return back()->with('success', 'This election record has been removed from your history.');
     }
 
     public function show(Request $request, $electionId)
@@ -183,7 +183,7 @@ class ResultsController extends Controller
 
         if (!$rootElection->results_available || $rootElection->is_revote) {
             return redirect()->route('student.results.index')
-                ->with('error', 'Results for this election are not yet available.');
+                ->with('error', 'Results for this election are not available yet.');
         }
 
         $positions = $this->getPositionsForElection($rootElection);
@@ -209,13 +209,13 @@ class ResultsController extends Controller
 
         if (!$election) {
             return redirect()->route('student.results.index')
-                ->with('error', 'No published results available.');
+                ->with('error', 'There are no published results yet.');
         }
 
         $positions = $this->getPositionsForElection($election);
         if (!$positions->contains('id', $position->id)) {
             return redirect()->route('student.results.index')
-                ->with('error', 'Results for this position are not available for the selected election.');
+                ->with('error', 'This position does not have results for the selected election.');
         }
 
         $rootElection = ElectionPeriod::getRootElection($election);
@@ -260,7 +260,7 @@ class ResultsController extends Controller
 
         if (!$election) {
             return redirect()->route('student.results.index')
-                ->with('error', 'No published results available.');
+                ->with('error', 'There are no published results yet.');
         }
 
         $positions = $this->getPositionsForElection($election);

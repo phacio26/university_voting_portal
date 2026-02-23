@@ -5,76 +5,330 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Reset Password</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: "Manrope", sans-serif; background: #eef3fa; }
-        .auth-wrap { min-height: 100vh; display: grid; place-items: center; padding: 1rem; }
-        .auth-card { width: 100%; max-width: 520px; border-radius: 16px; border: 1px solid #d9e2ef; background: #fff; box-shadow: 0 14px 30px rgba(0,0,0,0.08); }
-                    /* fixed-sidebar */
-        @media (min-width: 768px) {
-            .sidebar {
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                overflow-y: auto;
-                height: 100vh;
-                z-index: 1020;
-            }
-            .main-content {
-                margin-left: 25%;
-                position: relative;
-                height: auto;
-                overflow: visible;
+        :root {
+            --auth-ink: #0f172a;
+            --auth-border: #bcc7d6;
+            --auth-focus: #2e8bc0;
+            --auth-card-bg: rgba(238, 239, 241, 0.96);
+            --auth-input-bg: #dbe3ef;
+            --auth-btn: #3b8ebd;
+            --auth-btn-hover: #327ba4;
+            --back-btn: #ee9d0f;
+            --back-btn-hover: #cf8808;
+        }
+
+        * {
+            font-family: "Manrope", sans-serif;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+        }
+
+        body {
+            position: relative;
+            margin: 0;
+            min-height: 100svh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            color: var(--auth-ink);
+            background-image:
+                radial-gradient(1000px 460px at 8% -8%, rgba(14, 165, 161, 0.32), transparent 60%),
+                radial-gradient(920px 420px at 92% 108%, rgba(59, 130, 246, 0.25), transparent 62%),
+                repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 12px, rgba(255, 255, 255, 0) 12px 24px),
+                linear-gradient(140deg, #0b2f53 0%, #0e4b74 48%, #0f766e 100%);
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(760px 340px at 15% 20%, rgba(255, 255, 255, 0.2), transparent 68%),
+                radial-gradient(820px 380px at 85% 78%, rgba(148, 230, 224, 0.2), transparent 70%);
+            opacity: 0.55;
+            animation: bgFade 8s ease-in-out infinite alternate;
+        }
+
+        .auth-container {
+            position: relative;
+            z-index: 1;
+            min-height: 100svh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(0.5rem, 2vh, 1.2rem);
+        }
+
+        @keyframes bgFade {
+            0% { opacity: 0.35; }
+            100% { opacity: 0.7; }
+        }
+
+        .auth-card {
+            width: min(100%, 320px);
+            border: 0;
+            border-radius: 0;
+            background: var(--auth-card-bg);
+            box-shadow: 0 14px 34px rgba(2, 13, 30, 0.32);
+            padding: 0.82rem 0.78rem 0.86rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-step {
+            text-align: center;
+            font-size: 0.86rem;
+            color: #334155;
+            margin-bottom: 0.65rem;
+            font-weight: 700;
+        }
+
+        .input-group-text {
+            border-radius: 0;
+            border: 1px solid var(--auth-border);
+            border-left: 0;
+            color: #4b5a6c;
+            background: #edf1f7;
+            width: 36px;
+            justify-content: center;
+        }
+
+        .form-control {
+            border: 1px solid var(--auth-border);
+            border-radius: 0;
+            padding: 0.5rem 0.54rem;
+            font-size: 0.88rem;
+            color: #0f172a;
+            background: var(--auth-input-bg);
+        }
+
+        .form-control:focus {
+            border-color: var(--auth-focus);
+            background: #ecf3fb;
+            box-shadow: 0 0 0 0.17rem rgba(46, 139, 192, 0.14);
+        }
+
+        .form-control:focus + .input-group-text {
+            border-color: var(--auth-focus);
+            background: #edf5fe;
+        }
+
+        .form-control[readonly] {
+            opacity: 0.92;
+            cursor: not-allowed;
+        }
+
+        .btn-auth {
+            border: 0;
+            border-radius: 2px;
+            padding: 0.54rem 0.84rem;
+            font-size: 0.88rem;
+            font-weight: 700;
+            background: var(--auth-btn);
+            color: #fff;
+            line-height: 1;
+        }
+
+        .btn-auth:hover {
+            color: #fff;
+            background: var(--auth-btn-hover);
+        }
+
+        .btn-auth .btn-text {
+            font-size: 0.88rem;
+            vertical-align: middle;
+        }
+
+        .btn-back {
+            display: block;
+            width: 100%;
+            border: 0;
+            border-radius: 2px;
+            padding: 0.54rem 0.84rem;
+            font-size: 0.88rem;
+            font-weight: 700;
+            background: var(--back-btn);
+            color: #fff;
+            line-height: 1;
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 0.62rem;
+        }
+
+        .btn-back:hover {
+            color: #fff;
+            background: var(--back-btn-hover);
+        }
+
+        .auth-card .alert {
+            font-size: 0.8rem;
+            border-radius: 2px;
+            margin-bottom: 0.65rem;
+        }
+
+        .form-note {
+            font-size: 0.78rem;
+            color: #475569;
+            margin-top: 0.2rem;
+            margin-bottom: 0.62rem;
+        }
+
+        @media (max-width: 991px) {
+            body {
+                background-attachment: scroll;
             }
         }
-        @media (min-width: 992px) {
-            .sidebar {
-                width: 16.6666667%;
+
+        @media (max-width: 768px) {
+            .auth-card {
+                width: min(100%, 420px);
+                padding: 1.05rem 1rem 1.15rem;
             }
-            .main-content {
-                margin-left: 16.6666667%;
+
+            .auth-step {
+                font-size: 1rem;
+                margin-bottom: 0.72rem;
+            }
+
+            .form-control {
+                font-size: 1rem;
+                padding: 0.62rem 0.68rem;
+            }
+
+            .input-group-text {
+                width: 42px;
+                font-size: 0.9rem;
+            }
+
+            .btn-auth,
+            .btn-back {
+                min-height: 44px;
+                font-size: 0.95rem;
+                padding: 0.68rem 0.9rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .form-note {
+                font-size: 0.9rem;
+                margin-bottom: 0.72rem;
+            }
+
+            .auth-card .alert {
+                font-size: 0.86rem;
+                padding: 0.55rem 0.65rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .auth-container {
+                align-items: flex-start;
+                padding: max(0.75rem, env(safe-area-inset-top)) 0.75rem max(0.75rem, env(safe-area-inset-bottom));
+            }
+
+            .auth-card {
+                width: 100%;
+                margin-top: 0.4rem;
             }
         }
     </style>
 </head>
 <body>
-<div class="auth-wrap">
-    <div class="auth-card p-4">
-        <h1 class="h5 fw-bold mb-2">Set New Admin Password</h1>
-        <p class="text-muted">Use a secure password for your admin account.</p>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-step">Reset Admin Password</div>
 
-        @if($errors->any())
-            <div class="alert alert-danger">
-                @foreach($errors->all() as $error)
-                    <div>{{ $error }}</div>
-                @endforeach
-            </div>
-        @endif
+            @if ($errors->any())
+                <div class="alert alert-danger mb-3">
+                    @foreach ($errors->all() as $error)
+                        <div>{{ $error }}</div>
+                    @endforeach
+                </div>
+            @endif
 
-        <form method="POST" action="{{ route('admin.password.update') }}">
-            @csrf
-            <input type="hidden" name="token" value="{{ $token }}">
+            <form method="POST" action="{{ route('admin.password.update') }}">
+                @csrf
+                <input type="hidden" name="token" value="{{ $token }}">
 
-            <div class="mb-3">
-                <label for="email" class="form-label fw-semibold">Email Address</label>
-                <input id="email" type="email" class="form-control form-control-lg" name="email" value="{{ old('email', $email) }}" required>
-            </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input
+                            type="email"
+                            class="form-control @error('email') is-invalid @enderror"
+                            id="email"
+                            name="email"
+                            value="{{ old('email', $email) }}"
+                            required
+                            readonly
+                            placeholder="Email address"
+                        >
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                    </div>
+                    @error('email')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label fw-semibold">New Password</label>
-                <input id="password" type="password" class="form-control form-control-lg" name="password" required>
-            </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input
+                            type="password"
+                            class="form-control @error('password') is-invalid @enderror"
+                            id="password"
+                            name="password"
+                            required
+                            placeholder="New password"
+                        >
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    </div>
+                    @error('password')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            <div class="mb-3">
-                <label for="password_confirmation" class="form-label fw-semibold">Confirm Password</label>
-                <input id="password_confirmation" type="password" class="form-control form-control-lg" name="password_confirmation" required>
-            </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input
+                            type="password"
+                            class="form-control @error('password_confirmation') is-invalid @enderror"
+                            id="password_confirmation"
+                            name="password_confirmation"
+                            required
+                            placeholder="Confirm password"
+                        >
+                        <span class="input-group-text"><i class="fas fa-check"></i></span>
+                    </div>
+                    @error('password_confirmation')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            <button class="btn btn-primary w-100">Reset Password</button>
-        </form>
+                <div class="form-note">Use at least 8 characters with letters and numbers.</div>
+
+                <button type="submit" class="btn btn-auth w-100 mb-3" aria-label="Reset Password">
+                    <span class="btn-text"><i class="fas fa-rotate-right me-1"></i>Reset Password</span>
+                </button>
+
+                <a href="{{ route('admin.login') }}" class="btn-back">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Login
+                </a>
+            </form>
+        </div>
     </div>
-</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-

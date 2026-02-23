@@ -149,9 +149,10 @@
         .portal-shell small,
         .portal-shell .small,
         .portal-shell .form-text {
-            color: #334155 !important;
+            color: #152b42 !important;
             opacity: 1;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 0.01em;
         }
 
         .portal-shell .alert {
@@ -198,9 +199,13 @@
         }
 
         .portal-shell .text-muted,
-        .portal-shell small.text-muted {
-            color: #374151 !important;
+        .portal-shell small.text-muted,
+        .portal-shell .small.text-muted,
+        .portal-shell .card-title.text-muted {
+            color: #152b42 !important;
             opacity: 1;
+            font-weight: 700;
+            letter-spacing: 0.01em;
         }
 
         .portal-shell .btn {
@@ -460,7 +465,12 @@
                         <a class="nav-link {{ request()->routeIs('student.results.history') ? 'active' : '' }}" href="{{ route('student.results.history') }}">History</a>
                     </li>
                     <li class="nav-item ms-lg-3">
-                        <a class="nav-link portal-logout-link" href="{{ route('student.logout') }}">Logout</a>
+                        <form method="POST" action="{{ route('student.logout') }}" class="m-0">
+                            @csrf
+                            <button type="submit" class="nav-link portal-logout-link border-0">
+                                Logout
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </div>
@@ -571,3 +581,4 @@
     @stack('scripts')
 </body>
 </html>
+

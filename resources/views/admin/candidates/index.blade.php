@@ -197,7 +197,7 @@
         <div class="card-body text-center py-5">
             <i class="fas fa-users fa-3x text-muted mb-3"></i>
             <h5 class="text-muted">No Candidates Yet</h5>
-            <p class="text-muted">Add the first candidate to begin ballot setup.</p>
+            <p class="text-muted">Add the first candidate to begin voting setup.</p>
             <a href="{{ route('admin.candidates.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Add Candidate
             </a>

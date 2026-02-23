@@ -7,6 +7,7 @@ use App\Models\ElectionPeriod;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -16,24 +17,7 @@ class DashboardController extends Controller
         $student = Auth::guard('student')->user();
         $now = Carbon::now('Africa/Blantyre');
 
-        $activeCandidate = ElectionPeriod::where('start_time', '<=', $now)
-            ->where('end_time', '>=', $now)
-            ->orderBy('start_time', 'desc')
-            ->first();
-
-        if ($activeCandidate) {
-            ElectionPeriod::where('is_active', true)
-                ->where('id', '!=', $activeCandidate->id)
-                ->update(['is_active' => false]);
-
-            if (!$activeCandidate->is_active) {
-                $activeCandidate->update(['is_active' => true]);
-            }
-        } else {
-            ElectionPeriod::where('is_active', true)->update(['is_active' => false]);
-        }
-
-        ElectionPeriod::finalizeEndedElections($now);
+        $this->syncElectionState($now);
 
         $activeElection = ElectionPeriod::where('is_active', true)->first();
         $revoteElection = ElectionPeriod::where('is_revote', true)
@@ -45,10 +29,6 @@ class DashboardController extends Controller
         $nextElection = ElectionPeriod::where('start_time', '>', $now)
             ->orderBy('start_time')
             ->first();
-        $latestPublished = ElectionPeriod::where('results_available', true)
-            ->where('is_revote', false)
-            ->orderBy('end_time', 'desc')
-            ->first();
         $activeOrUpcoming = ElectionPeriod::where('end_time', '>=', $now)->exists();
         
         $hasVoted = $activeElection ? $student->hasVotedInPeriod($activeElection->id) : false;
@@ -56,15 +36,11 @@ class DashboardController extends Controller
         $revoteCanVote = $revoteElection
             ? ($revoteElection->isVotingOpen() && !$student->hasVotedInPeriod($revoteElection->id))
             : false;
-        $showResults = !$activeOrUpcoming && (bool) $latestPublished;
-
-        $registeredStudents = Student::count();
-        $ballotsCast = $activeElection
-            ? $activeElection->votes()->distinct('student_id')->count('student_id')
-            : 0;
-        $turnoutPercent = $registeredStudents > 0
-            ? round(($ballotsCast / $registeredStudents) * 100, 1)
-            : 0;
+        $showResults = !$activeOrUpcoming && ElectionPeriod::where('results_available', true)
+            ->where('is_revote', false)
+            ->exists();
+        ['registered_students' => $registeredStudents, 'ballots_cast' => $ballotsCast, 'turnout_percent' => $turnoutPercent] =
+            $this->getParticipationMetrics($activeElection);
 
         return view('student.dashboard', compact(
             'student', 
@@ -86,24 +62,7 @@ class DashboardController extends Controller
         $student = Auth::guard('student')->user();
         $now = Carbon::now('Africa/Blantyre');
 
-        $activeCandidate = ElectionPeriod::where('start_time', '<=', $now)
-            ->where('end_time', '>=', $now)
-            ->orderBy('start_time', 'desc')
-            ->first();
-
-        if ($activeCandidate) {
-            ElectionPeriod::where('is_active', true)
-                ->where('id', '!=', $activeCandidate->id)
-                ->update(['is_active' => false]);
-
-            if (!$activeCandidate->is_active) {
-                $activeCandidate->update(['is_active' => true]);
-            }
-        } else {
-            ElectionPeriod::where('is_active', true)->update(['is_active' => false]);
-        }
-
-        ElectionPeriod::finalizeEndedElections($now);
+        $this->syncElectionState($now);
 
         $activeElection = ElectionPeriod::where('is_active', true)
             ->with('positions')
@@ -123,16 +82,11 @@ class DashboardController extends Controller
             ? ($revoteElection->isVotingOpen() && !$student->hasVotedInPeriod($revoteElection->id))
             : false;
         $activeOrUpcoming = ElectionPeriod::where('end_time', '>=', $now)->exists();
-        $showResults = !$activeOrUpcoming && (bool) ElectionPeriod::where('results_available', true)
+        $showResults = !$activeOrUpcoming && ElectionPeriod::where('results_available', true)
             ->where('is_revote', false)
-            ->first();
-        $registeredStudents = Student::count();
-        $ballotsCast = $activeElection
-            ? $activeElection->votes()->distinct('student_id')->count('student_id')
-            : 0;
-        $turnoutPercent = $registeredStudents > 0
-            ? round(($ballotsCast / $registeredStudents) * 100, 1)
-            : 0;
+            ->exists();
+        ['registered_students' => $registeredStudents, 'ballots_cast' => $ballotsCast, 'turnout_percent' => $turnoutPercent] =
+            $this->getParticipationMetrics($activeElection);
 
         return response()->json([
             'now_iso' => $now->format('c'),
@@ -166,5 +120,51 @@ class DashboardController extends Controller
             'turnout_percent' => $turnoutPercent,
             'show_results' => $showResults,
         ]);
+    }
+
+    private function syncElectionState(Carbon $now): void
+    {
+        $cacheKey = 'election_state_sync:' . intdiv($now->timestamp, 10);
+        Cache::remember($cacheKey, now()->addSeconds(12), function () use ($now) {
+            $activeCandidate = ElectionPeriod::where('start_time', '<=', $now)
+                ->where('end_time', '>=', $now)
+                ->orderByDesc('start_time')
+                ->first();
+
+            if ($activeCandidate) {
+                ElectionPeriod::where('is_active', true)
+                    ->where('id', '!=', $activeCandidate->id)
+                    ->update(['is_active' => false]);
+
+                if (!$activeCandidate->is_active) {
+                    $activeCandidate->update(['is_active' => true]);
+                }
+            } else {
+                ElectionPeriod::where('is_active', true)->update(['is_active' => false]);
+            }
+
+            ElectionPeriod::finalizeEndedElections($now);
+            return true;
+        });
+    }
+
+    private function getParticipationMetrics(?ElectionPeriod $activeElection): array
+    {
+        $cacheKey = 'dashboard_participation_metrics:' . ($activeElection?->id ?? 'none');
+
+        return Cache::remember($cacheKey, now()->addSeconds(10), function () use ($activeElection) {
+            $registeredStudents = Student::count();
+            $ballotsCast = $activeElection
+                ? $activeElection->votes()->distinct('student_id')->count('student_id')
+                : 0;
+
+            return [
+                'registered_students' => $registeredStudents,
+                'ballots_cast' => $ballotsCast,
+                'turnout_percent' => $registeredStudents > 0
+                    ? round(($ballotsCast / $registeredStudents) * 100, 1)
+                    : 0,
+            ];
+        });
     }
 }

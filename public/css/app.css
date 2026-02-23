@@ -86,8 +86,18 @@ p, li, td, th, label, .form-label {
 
 .text-muted,
 small.text-muted {
-    color: #374151 !important;
+    color: #152b42 !important;
     opacity: 1;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.small.text-muted,
+.text-muted.small,
+.card-title.text-muted {
+    color: #152b42 !important;
+    font-weight: 700;
+    letter-spacing: 0.01em;
 }
 
 a {
@@ -1025,3 +1035,4 @@ a {
         color: black !important;
     }
 }
+

@@ -193,13 +193,13 @@
                 </div>
                 <div class="col-md-3 col-6">
                     <div class="border rounded p-3 h-100 monitor-kpi">
-                        <div class="text-muted small">Ballots Cast</div>
+                        <div class="text-muted small">Votes Cast</div>
                         <div id="pulseBallotsCast" class="kpi-value mb-0">{{ $votingPulse['ballots_cast'] }} / {{ $votingPulse['ballots_expected'] }}</div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6">
                     <div class="border rounded p-3 h-100 monitor-kpi">
-                        <div class="text-muted small">Ballot Progress</div>
+                        <div class="text-muted small">Vote Progress</div>
                         <div id="pulseBallotProgress" class="kpi-value mb-0">{{ number_format($votingPulse['ballot_progress'], 1) }}%</div>
                     </div>
                 </div>

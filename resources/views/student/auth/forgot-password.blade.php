@@ -6,199 +6,275 @@
     <title>Forgot Password - Student Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --auth-ink: #0f172a;
+            --auth-border: #bcc7d6;
+            --auth-focus: #2e8bc0;
+            --auth-card-bg: rgba(238, 239, 241, 0.96);
+            --auth-input-bg: #dbe3ef;
+            --auth-btn: #3b8ebd;
+            --auth-btn-hover: #327ba4;
+            --back-btn: #ee9d0f;
+            --back-btn-hover: #cf8808;
+        }
+
         * {
-            font-family: 'Poppins', sans-serif;
+            font-family: "Manrope", sans-serif;
         }
 
-        .login-container {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        html,
+        body {
+            min-height: 100%;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100svh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            color: var(--auth-ink);
+            background-image:
+                radial-gradient(1000px 460px at 8% -8%, rgba(14, 165, 161, 0.32), transparent 60%),
+                radial-gradient(920px 420px at 92% 108%, rgba(59, 130, 246, 0.25), transparent 62%),
+                repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 12px, rgba(255, 255, 255, 0) 12px 24px),
+                linear-gradient(140deg, #0b2f53 0%, #0e4b74 48%, #0f766e 100%);
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+        }
+
+        .auth-container {
+            min-height: 100svh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: clamp(0.5rem, 2vh, 1.2rem);
         }
 
-        .login-card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-            width: 100%;
-            max-width: 450px;
-            padding: 2.5rem;
-            animation: slideUp 0.5s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .card-header-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 15px;
+        .auth-card {
+            width: min(100%, 320px);
+            border: 0;
+            border-radius: 0;
+            background: var(--auth-card-bg);
+            box-shadow: 0 14px 34px rgba(2, 13, 30, 0.32);
+            padding: 0.82rem 0.78rem 0.86rem;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 1.8rem;
-            color: white;
         }
 
-        .text-center h3 {
-            font-size: 1.8rem;
+        .auth-logo-wrap {
+            text-align: center;
+            margin-bottom: 0.6rem;
+        }
+
+        .auth-logo {
+            width: 82px;
+            max-width: 100%;
+            height: auto;
+            display: inline-block;
+        }
+
+        .auth-step {
+            text-align: center;
+            font-size: 0.86rem;
+            color: #334155;
+            margin-bottom: 0.65rem;
             font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 0.5rem;
         }
 
-        .text-center p {
-            color: #718096;
-            font-size: 0.95rem;
-            line-height: 1.6;
+        .auth-note {
+            margin-bottom: 0.58rem;
+            text-align: center;
+            font-size: 0.78rem;
+            color: #5a6879;
+            line-height: 1.35;
         }
 
-        .form-label {
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 0.75rem;
-            font-size: 0.95rem;
+        .input-group-text {
+            border-radius: 0;
+            border: 1px solid var(--auth-border);
+            border-left: 0;
+            color: #5b6776;
+            background: #edf1f7;
+            width: 36px;
+            justify-content: center;
         }
 
         .form-control {
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 0.75rem 1rem;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            background: #f7fafc;
+            border: 1px solid var(--auth-border);
+            border-radius: 0;
+            padding: 0.5rem 0.54rem;
+            font-size: 0.88rem;
+            color: #0f172a;
+            background: var(--auth-input-bg);
+        }
+
+        .form-control::placeholder {
+            color: #7b8797;
+            opacity: 1;
         }
 
         .form-control:focus {
-            background: white;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: var(--auth-focus);
+            background: #ecf3fb;
+            box-shadow: 0 0 0 0.17rem rgba(46, 139, 192, 0.14);
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border: none;
-            border-radius: 12px;
-            padding: 0.85rem 1.5rem;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 1.5rem;
+        .form-control:focus + .input-group-text {
+            border-color: var(--auth-focus);
+            background: #edf5fe;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(102, 126, 234, 0.3);
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+        .btn-row {
+            display: flex;
+            gap: 0.68rem;
+            margin-top: 0.25rem;
         }
 
-        .alert {
-            border-radius: 12px;
-            border: 2px solid;
-            margin-bottom: 1.5rem;
-            padding: 1rem 1.2rem;
-        }
-
-        .alert-danger {
-            background: #fff5f5;
-            border-color: #fc8181;
-            color: #c53030;
-        }
-
-        .alert-success {
-            background: #f0fff4;
-            border-color: #9ae6b4;
-            color: #22543d;
-        }
-
-        .text-center-bottom {
-            text-align: center;
-            margin-top: 1.5rem;
-        }
-
-        .text-center-bottom p {
-            margin: 0;
-            color: #718096;
-        }
-
-        .text-center-bottom a {
-            color: #667eea;
+        .btn-step {
+            flex: 1;
+            border: 0;
+            border-radius: 2px;
+            padding: 0.54rem 0.84rem;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #fff;
             text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            text-align: center;
+            line-height: 1;
         }
 
-        .text-center-bottom a:hover {
-            color: #764ba2;
-            text-decoration: underline;
+        .btn-send {
+            background: var(--auth-btn);
         }
 
-        .info-box {
-            background: #f7fafc;
-            border-left: 4px solid #667eea;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-            color: #718096;
-            line-height: 1.6;
+        .btn-send:hover {
+            color: #fff;
+            background: var(--auth-btn-hover);
         }
 
-        .info-box i {
-            color: #667eea;
-            margin-right: 0.5rem;
+        .btn-back {
+            background: var(--back-btn);
+        }
+
+        .btn-back:hover {
+            color: #fff;
+            background: var(--back-btn-hover);
+        }
+
+        .auth-card .alert {
+            font-size: 0.78rem;
+            border-radius: 2px;
+            margin-bottom: 0.52rem;
+            padding: 0.45rem 0.58rem;
+            line-height: 1.28;
+        }
+
+        .reset-link {
+            font-size: 0.74rem;
+            word-break: break-all;
+        }
+
+        @media (max-width: 991px) {
+            body {
+                background-attachment: scroll;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .auth-card {
+                width: min(100%, 420px);
+                padding: 1.05rem 1rem 1.15rem;
+            }
+
+            .auth-step {
+                font-size: 1rem;
+                margin-bottom: 0.72rem;
+            }
+
+            .auth-note {
+                font-size: 0.9rem;
+                margin-bottom: 0.72rem;
+            }
+
+            .form-control {
+                font-size: 1rem;
+                padding: 0.62rem 0.68rem;
+            }
+
+            .input-group-text {
+                width: 42px;
+                font-size: 0.9rem;
+            }
+
+            .btn-step {
+                min-height: 44px;
+                font-size: 0.95rem;
+                padding: 0.68rem 0.9rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .auth-card .alert {
+                font-size: 0.86rem;
+                padding: 0.55rem 0.65rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .auth-container {
+                align-items: flex-start;
+                padding: max(0.75rem, env(safe-area-inset-top)) 0.75rem max(0.75rem, env(safe-area-inset-bottom));
+            }
+
+            .auth-card {
+                width: 100%;
+                margin-top: 0.4rem;
+            }
+
+            .auth-logo {
+                width: 96px;
+            }
+
+            .btn-row {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-card">
-            <div class="card-header-icon">
-                <i class="fas fa-key"></i>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo-wrap">
+                <img class="auth-logo" src="{{ asset('storage/images/favicon.png') }}" alt="University logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                <i class="fas fa-vote-yea" style="display:none;font-size:3.2rem;color:#163e65;"></i>
             </div>
 
-            <div class="text-center mb-4">
-                <h3>Forgot Password?</h3>
-                <p>Enter your email address and we'll send you a link to reset your password</p>
-            </div>
+            <div class="auth-step">Reset Password</div>
+            <p class="auth-note">Enter your email to receive a reset link.</p>
 
             @if ($errors->any())
                 <div class="alert alert-danger">
                     @foreach ($errors->all() as $error)
-                        <div><i class="fas fa-exclamation-circle me-2"></i>{{ $error }}</div>
+                        <div>{{ $error }}</div>
                     @endforeach
                 </div>
             @endif
 
             @if (session('status'))
-                <div class="alert alert-success">
-                    <i class="fas fa-check-circle me-2"></i>{{ session('status') }}
-                </div>
+                <div class="alert alert-success">{{ session('status') }}</div>
             @endif
 
             @if (session('reset_url'))
                 <div class="alert alert-warning">
-                    <div class="mb-2"><i class="fas fa-link me-2"></i>Temporary reset link:</div>
-                    <a href="{{ session('reset_url') }}" class="small" style="word-break: break-all;">
-                        {{ session('reset_url') }}
-                    </a>
+                    <div class="mb-1">Temporary reset link:</div>
+                    <a href="{{ session('reset_url') }}" class="reset-link">{{ session('reset_url') }}</a>
                 </div>
             @endif
 
@@ -206,40 +282,32 @@
                 @csrf
 
                 <div class="mb-3">
-                    <label for="email" class="form-label">
-                        <i class="fas fa-envelope me-2" style="color: #667eea;"></i>Email Address
-                    </label>
-                    <input type="email"
-                           class="form-control @error('email') is-invalid @enderror"
-                           id="email"
-                           name="email"
-                           value="{{ old('email') }}"
-                           required
-                           autofocus
-                           placeholder="Enter your registered email">
+                    <div class="input-group">
+                        <input
+                            type="email"
+                            class="form-control @error('email') is-invalid @enderror"
+                            id="email"
+                            name="email"
+                            value="{{ old('email') }}"
+                            required
+                            autofocus
+                            placeholder="Email address"
+                        >
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                    </div>
                     @error('email')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <div class="info-box">
-                    <i class="fas fa-info-circle"></i>
-                    <strong>Note:</strong> A password reset link will be sent to your email address. Please check your inbox and follow the instructions to reset your password.
-                </div>
-
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-paper-plane me-2"></i>Send Reset Link
-                </button>
-
-                <div class="text-center-bottom">
-                    <p>
-                        <a href="{{ route('student.login') }}">
-                            <i class="fas fa-arrow-left me-1"></i>Back to Login
-                        </a>
-                    </p>
+                <div class="btn-row">
+                    <button type="submit" class="btn-step btn-send">Send Link</button>
+                    <a href="{{ route('student.login') }}" class="btn-step btn-back">Back</a>
                 </div>
             </form>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

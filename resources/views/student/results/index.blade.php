@@ -174,7 +174,7 @@
 
 <div class="row g-3 mb-3">
     <div class="col-6 col-lg-3"><div class="stats-card text-center"><small class="text-muted d-block">Positions</small><strong>{{ $positions->count() }}</strong></div></div>
-    <div class="col-6 col-lg-3"><div class="stats-card text-center"><small class="text-muted d-block">Ballots Cast</small><strong>{{ number_format($totalBallots) }}</strong></div></div>
+    <div class="col-6 col-lg-3"><div class="stats-card text-center"><small class="text-muted d-block">Votes Cast</small><strong>{{ number_format($totalBallots) }}</strong></div></div>
     <div class="col-6 col-lg-3"><div class="stats-card text-center"><small class="text-muted d-block">Registered</small><strong>{{ number_format($studentsCount) }}</strong></div></div>
     <div class="col-6 col-lg-3"><div class="stats-card text-center"><small class="text-muted d-block">Turnout</small><strong>{{ number_format($turnout, 1) }}%</strong></div></div>
 </div>

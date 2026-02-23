@@ -32,7 +32,7 @@ class PositionController extends Controller
             'order' => 'required|integer|min:0',
         ]);
 
-        Position::create($request->all());
+        Position::create($request->only(['title', 'description', 'order']));
 
         return redirect()->route('admin.positions.index')
             ->with('success', 'Position created successfully.');
@@ -51,7 +51,7 @@ class PositionController extends Controller
             'order' => 'required|integer|min:0',
         ]);
 
-        $position->update($request->all());
+        $position->update($request->only(['title', 'description', 'order']));
 
         return redirect()->route('admin.positions.index')
             ->with('success', 'Position updated successfully.');
