@@ -14,17 +14,55 @@
 
     @media (max-width: 767.98px) {
         .result-card {
-            padding: 0.8rem !important;
+            padding: 1rem !important;
         }
 
         .result-card h5 {
             font-size: 1rem;
         }
 
+        .table-responsive {
+            margin: 0 -0.5rem;
+        }
+
+        .table-sm {
+            font-size: 0.85rem;
+        }
+
         .table-sm td,
         .table-sm th {
-            white-space: nowrap;
-            font-size: 0.82rem;
+            padding: 0.5rem;
+            vertical-align: top;
+        }
+
+        .mobile-candidate-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .mobile-votes-info {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .desktop-table {
+            display: none;
+        }
+
+        .mobile-cards {
+            display: block;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .desktop-table {
+            display: table;
+        }
+
+        .mobile-cards {
+            display: none;
         }
     }
 </style>
@@ -40,7 +78,7 @@
 </div>
 
 @if($pendingResolution)
-    <div class="alert alert-warning">
+    <div class="alert alert-warning" role="alert">
         <strong>Finalization still pending:</strong>
         At least one position is still tied or awaiting a re-vote. Current leaders are shown below.
     </div>
@@ -77,23 +115,24 @@
                 @elseif($position->is_tie)
                     <span class="badge bg-warning text-dark">Tie</span>
                 @else
-                    <span class="badge bg-secondary">No Winner Yet</span>
+                    <span class="badge bg-secondary">Lost Elections</span>
                 @endif
             </div>
 
             @if($position->winner)
-                <div class="alert alert-success py-2 mb-2">
+                <div class="alert alert-success py-2 mb-2" role="alert">
                     <strong>{{ $position->winner->name }}</strong> won with
                     {{ number_format($position->winner->votes_count) }} votes
                     ({{ number_format($position->winner->vote_percentage, 1) }}%).
                 </div>
             @elseif($position->is_tie)
-                <div class="alert alert-warning py-2 mb-2">
+                <div class="alert alert-warning py-2 mb-2" role="alert">
                     This position is tied. Re-vote is required or still pending for final winner declaration.
                 </div>
             @endif
 
-            <div class="table-responsive">
+            <!-- Desktop Table View -->
+            <div class="table-responsive desktop-table">
                 <table class="table table-sm align-middle mb-0">
                     <thead>
                         <tr>
@@ -116,6 +155,26 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="mobile-cards">
+                @forelse($position->candidates as $candidate)
+                    <div class="border rounded p-2 mb-2 bg-light">
+                        <div class="mobile-candidate-info">
+                            <strong>{{ $candidate->name }}</strong>
+                            @if($position->winner && $position->winner->id === $candidate->id)
+                                <span class="badge bg-success">Winner</span>
+                            @endif
+                        </div>
+                        <div class="mobile-votes-info">
+                            <span>{{ number_format($candidate->votes_count) }} votes</span>
+                            <span class="ms-3">{{ number_format($candidate->vote_percentage, 1) }}%</span>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-muted text-center py-2">No candidates for this position.</div>
+                @endforelse
             </div>
         </div>
     @endforeach
