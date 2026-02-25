@@ -50,17 +50,17 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.election-periods.*') ? 'active' : '' }}" 
-                       href="{{ route('admin.election-periods.index') }}">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Election Periods</span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('admin.positions.*') ? 'active' : '' }}" 
                        href="{{ route('admin.positions.index') }}">
                         <i class="fas fa-bullseye"></i>
                         <span>Positions</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.election-periods.*') ? 'active' : '' }}" 
+                       href="{{ route('admin.election-periods.index') }}">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Election Periods</span>
                     </a>
                 </li>
                 <li class="nav-item">

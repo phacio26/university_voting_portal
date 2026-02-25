@@ -277,7 +277,7 @@
         @else
             <div class="text-center py-4">
                 <i class="fas fa-info-circle fa-2x text-muted mb-3"></i>
-                <p class="text-muted mb-0">Start an election period to monitor live leaders and voting progress.</p>
+                <p class="text-muted mb-0"> voting progress will be displayed here when election is active</p>
             </div>
         @endif
     </div>

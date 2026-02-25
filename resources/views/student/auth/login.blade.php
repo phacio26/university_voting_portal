@@ -16,6 +16,8 @@
             --auth-input-bg: #dbe3ef;
             --auth-btn: #3b8ebd;
             --auth-btn-hover: #327ba4;
+            --back-btn: #ee9d0f;
+            --back-btn-hover: #cf8808;
         }
 
         * {
@@ -42,7 +44,29 @@
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
+            background-attachment: fixed;
             background-attachment: scroll;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(1000px 460px at 8% -8%, rgba(14, 165, 161, 0.32), transparent 60%),
+                radial-gradient(920px 420px at 92% 108%, rgba(59, 130, 246, 0.25), transparent 62%),
+                repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 12px, rgba(255, 255, 255, 0) 12px 24px),
+                linear-gradient(140deg, #0b2f53 0%, #0e4b74 48%, #0f766e 100%);
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            transform: translateZ(0);
+            will-change: transform;
+            z-index: -1;
         }
 
         .auth-container {
@@ -54,15 +78,16 @@
         }
 
         .auth-card {
-            width: min(100%, 342px);
+            width: min(100%, 380px);
             border: 0;
             border-radius: 0;
             background: var(--auth-card-bg);
             box-shadow: 0 14px 34px rgba(2, 13, 30, 0.32);
-            padding: 0.95rem 0.9rem 0.98rem;
+            padding: 0.82rem 0.78rem 0.86rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            min-height: 380px;
         }
 
         .auth-logo-wrap {
@@ -71,10 +96,18 @@
         }
 
         .auth-logo {
-            width: 92px;
+            width:  90px;
             max-width: 100%;
             height: auto;
             display: inline-block;
+        }
+
+        .auth-step {
+            text-align: center;
+            font-size: 0.86rem;
+            color: #334155;
+            margin-bottom: 0.65rem;
+            font-weight: 700;
         }
 
         .input-group-text {
@@ -90,10 +123,16 @@
         .form-control {
             border: 1px solid var(--auth-border);
             border-radius: 0;
-            padding: 0.58rem 0.62rem;
-            font-size: 0.92rem;
+            padding: 0.5rem 0.54rem;
+            font-size: 0.88rem;
             color: #0f172a;
             background: var(--auth-input-bg);
+            width: 100%;
+        }
+
+        .form-control::placeholder {
+            color: #6b7b8f;
+            opacity: 1;
         }
 
         .form-control:focus {
@@ -107,73 +146,47 @@
             background: #edf5fe;
         }
 
-        .forgot-password-link {
-            color: #2d79a7;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.92rem;
+        .btn-row {
+            display: flex;
+            gap: 0.56rem;
+            margin-top: 0.15rem;
         }
 
-        .forgot-password-link:hover {
-            color: #205f86;
-            text-decoration: underline;
-        }
-
-        .btn-auth {
+        .btn-step {
+            flex: 1;
             border: 0;
             border-radius: 2px;
-            padding: 0.62rem 0.92rem;
-            font-size: 0.92rem;
+            padding: 0.54rem 0.84rem;
+            font-size: 0.88rem;
             font-weight: 700;
-            background: var(--auth-btn);
-            color: #fff;
             line-height: 1;
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
         }
 
-        .btn-auth:hover {
+        .btn-start {
+            background: var(--auth-btn);
+        }
+
+        .btn-start:hover {
             color: #fff;
             background: var(--auth-btn-hover);
         }
 
-        .btn-auth .btn-text {
-            font-size: 0.92rem;
-            vertical-align: middle;
+        .btn-cancel {
+            background: var(--back-btn);
         }
 
-        .btn-register {
-            display: block;
-            width: 100%;
-            border: 0;
-            border-radius: 2px;
-            padding: 0.62rem 0.92rem;
-            font-size: 0.92rem;
-            font-weight: 700;
-            background: #ee9d0f;
+        .btn-cancel:hover {
             color: #fff;
-            line-height: 1;
-            text-decoration: none;
-            text-align: center;
-            margin-bottom: 0.62rem;
-        }
-
-        .btn-register:hover {
-            color: #fff;
-            background: #cf8808;
+            background: var(--back-btn-hover);
         }
 
         .auth-card .alert {
             font-size: 0.8rem;
             border-radius: 2px;
-            margin-bottom: 0.65rem;
-        }
-
-        .remember-wrap {
-            margin-bottom: 0.72rem;
-        }
-
-        .form-check-label {
-            font-size: 0.82rem;
-            color: #334155;
+            margin-bottom: 0.62rem;
         }
 
         @media (max-width: 991px) {
@@ -188,6 +201,11 @@
                 padding: 1.05rem 1rem 1.15rem;
             }
 
+            .auth-step {
+                font-size: 1rem;
+                margin-bottom: 0.72rem;
+            }
+
             .form-control {
                 font-size: 1rem;
                 padding: 0.62rem 0.68rem;
@@ -198,19 +216,13 @@
                 font-size: 0.9rem;
             }
 
-            .btn-auth,
-            .btn-register {
+            .btn-step {
                 min-height: 44px;
                 font-size: 0.95rem;
                 padding: 0.68rem 0.9rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-            }
-
-            .forgot-password-link,
-            .form-check-label {
-                font-size: 0.9rem;
             }
 
             .auth-card .alert {
@@ -230,8 +242,8 @@
                 margin-top: 0.4rem;
             }
 
-            .auth-logo {
-                width: 96px;
+            .btn-row {
+                flex-direction: column;
             }
         }
     </style>
@@ -244,22 +256,24 @@
                 <i class="fas fa-vote-yea" style="display:none;font-size:3.2rem;color:#163e65;"></i>
             </div>
 
-            @if(session('status'))
-                <div class="alert alert-success">{{ session('status') }}</div>
-            @endif
-            @if(session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
+            <div class="auth-step">Login to your account</div>
+
             @if($errors->any())
                 <div class="alert alert-danger mb-3">
-                    @foreach($errors->all() as $error)
-                        <div>{{ $error }}</div>
-                    @endforeach
+                    Please check highlighted fields and try again.
                 </div>
+            @endif
+
+            @if(session('status'))
+                <div class="alert alert-success mb-3">{{ session('status') }}</div>
+            @endif
+            @if(session('success'))
+                <div class="alert alert-success mb-3">{{ session('success') }}</div>
             @endif
 
             <form method="POST" action="{{ route('student.login') }}">
                 @csrf
+
                 <div class="mb-3">
                     <div class="input-group">
                         <input
@@ -272,7 +286,7 @@
                             autofocus
                             placeholder="Registration number"
                         >
-                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                     </div>
                     @error('registration_number')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -296,23 +310,21 @@
                     @enderror
                 </div>
 
-                <div class="remember-wrap">
-                    <div class="form-check m-0">
-                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                        <label class="form-check-label" for="remember">Remember me</label>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                            <label class="form-check-label" for="remember">Remember me</label>
+                        </div>
+                        <a href="{{ route('student.password.request') }}" style="font-size: 0.78rem; text-decoration: none; color: #3b8ebd; font-weight: 600;">
+                            <i class="fas fa-key me-1"></i>Forgot password?
+                        </a>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-auth w-100 mb-3" aria-label="Login">
-                    <span class="btn-text"><i class="fas fa-circle-check me-1"></i>Login</span>
-                </button>
-
-                <a href="{{ route('student.register') }}" class="btn-register">
-                    <i class="fas fa-user-plus me-1"></i>Registration
-                </a>
-
-                <div>
-                    <a href="{{ route('student.password.request') }}" class="forgot-password-link">Forgot Password?</a>
+                <div class="btn-row">
+                    <button type="submit" class="btn-step btn-start">Login</button>
+                    <a href="{{ route('student.register') }}" class="btn-step btn-cancel">Register</a>
                 </div>
             </form>
         </div>

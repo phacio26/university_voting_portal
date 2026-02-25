@@ -45,7 +45,29 @@
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
+            background-attachment: fixed;
             background-attachment: scroll;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(1000px 460px at 8% -8%, rgba(14, 165, 161, 0.32), transparent 60%),
+                radial-gradient(920px 420px at 92% 108%, rgba(59, 130, 246, 0.25), transparent 62%),
+                repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 12px, rgba(255, 255, 255, 0) 12px 24px),
+                linear-gradient(140deg, #0b2f53 0%, #0e4b74 48%, #0f766e 100%);
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            transform: translateZ(0);
+            will-change: transform;
+            z-index: -1;
         }
 
         body::before {
@@ -76,7 +98,7 @@
         }
 
         .auth-card {
-            width: min(100%, 320px);
+            width: min(100%, 417px);
             border: 0;
             border-radius: 0;
             background: var(--auth-card-bg);
@@ -291,12 +313,22 @@
                             name="password"
                             required
                             placeholder="New password"
+                            minlength="8"
+                            maxlength="8"
+                            pattern="[A-Za-z\d]{8}"
+                            title="Password must be exactly 8 characters long with letters and numbers only"
                         >
                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
                     </div>
                     @error('password')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
+                    <div class="password-strength mt-2">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar" id="password-strength-bar" role="progressbar" style="width: 0%;"></div>
+                        </div>
+                        <small class="text-muted" id="password-strength-text">Password strength:</small>
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -330,5 +362,39 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('password');
+            const strengthBar = document.getElementById('password-strength-bar');
+            const strengthText = document.getElementById('password-strength-text');
+
+            function checkPasswordStrength(password) {
+                let strength = 0;
+
+                if (password.length === 8) strength++;
+                if (/[A-Za-z]/.test(password)) strength++;
+                if (/\d/.test(password)) strength++;
+
+                const strengthLevels = {
+                    0: { width: '0%', text: 'Invalid', class: 'bg-danger' },
+                    1: { width: '33%', text: 'Weak', class: 'bg-warning' },
+                    2: { width: '67%', text: 'Good', class: 'bg-info' },
+                    3: { width: '100%', text: 'Strong', class: 'bg-success' }
+                };
+
+                const level = strengthLevels[strength] || strengthLevels[0];
+                
+                strengthBar.style.width = level.width;
+                strengthBar.className = 'progress-bar ' + level.class;
+                strengthText.textContent = 'Password strength: ' + level.text;
+                strengthText.className = level.class === 'bg-danger' || level.class === 'bg-warning' ? 'text-danger' : 
+                                       level.class === 'bg-info' ? 'text-info' : 'text-success';
+            }
+
+            passwordInput.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+            });
+        });
+    </script>
 </body>
 </html>

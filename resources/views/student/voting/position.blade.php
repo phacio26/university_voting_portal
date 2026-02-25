@@ -15,6 +15,18 @@
         overflow: hidden;
     }
     
+    .candidate-choice:hover .avatar-img {
+        transform: scale(1.05);
+        border-color: #a0c4ff;
+        box-shadow: 0 8px 20px rgba(10, 77, 145, 0.2);
+    }
+    
+    .candidate-choice:hover .avatar-fallback {
+        transform: scale(1.05);
+        border-color: #a0c4ff;
+        box-shadow: 0 8px 20px rgba(10, 77, 145, 0.2);
+    }
+    
     .candidate-choice:hover {
         border-color: #a0c4ff;
         box-shadow: 0 8px 20px rgba(10, 77, 145, 0.15);
@@ -69,35 +81,36 @@
     
     .avatar-img {
         display: block;
-        width: 96px;
-        height: 96px;
-        min-width: 96px;
-        min-height: 96px;
-        aspect-ratio: 1 / 1;
+        width: 140px;
+        height: 140px;
         border-radius: 16px;
         object-fit: cover;
-        object-position: center 30%;
-        border: 3px solid var(--portal-border);
-        background: #eef3f9;
-        box-shadow: 0 2px 10px rgba(15, 23, 42, 0.10);
+        border: 3px solid #e2e8f0;
+        transition: transform 0.3s ease, border-color 0.3s ease;
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
         image-rendering: auto;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        max-width: 100%;
+        height: auto;
     }
     
     .avatar-fallback {
         display: inline-flex;
-        width: 96px;
-        height: 96px;
-        min-width: 96px;
-        min-height: 96px;
+        width: 140px;
+        height: 140px;
+        min-width: 140px;
+        min-height: 140px;
         aspect-ratio: 1 / 1;
         border-radius: 16px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 700;
+        font-size: 2.5rem;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #e6eef8, #dbe7f5);
-        color: #2f4f73;
-        font-weight: 800;
-        font-size: 2.5rem;
-        border: 3px solid var(--portal-border);
+        border: 3px solid #e2e8f0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     @media (min-width: 992px) {
@@ -107,12 +120,12 @@
 
         .avatar-img,
         .avatar-fallback {
-            width: 112px;
-            height: 132px;
-            min-width: 112px;
-            min-height: 132px;
-            border-radius: 14px;
-            aspect-ratio: 112 / 132;
+            width: 160px;
+            height: 160px;
+            min-width: 160px;
+            min-height: 160px;
+            border-radius: 18px;
+            aspect-ratio: 1 / 1;
         }
 
         .avatar-img {
@@ -153,13 +166,13 @@
 
         .avatar-img,
         .avatar-fallback {
-            width: 72px;
-            height: 72px;
-            border-radius: 10px;
+            width: 120px;
+            height: 120px;
+            border-radius: 14px;
         }
 
         .avatar-fallback {
-            font-size: 1.35rem;
+            font-size: 2rem;
         }
 
         .candidate-radio {

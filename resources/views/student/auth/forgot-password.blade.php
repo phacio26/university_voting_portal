@@ -44,7 +44,29 @@
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
+            background-attachment: fixed;
             background-attachment: scroll;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(1000px 460px at 8% -8%, rgba(14, 165, 161, 0.32), transparent 60%),
+                radial-gradient(920px 420px at 92% 108%, rgba(59, 130, 246, 0.25), transparent 62%),
+                repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 12px, rgba(255, 255, 255, 0) 12px 24px),
+                linear-gradient(140deg, #0b2f53 0%, #0e4b74 48%, #0f766e 100%);
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            transform: translateZ(0);
+            will-change: transform;
+            z-index: -1;
         }
 
         .auth-container {
@@ -56,7 +78,7 @@
         }
 
         .auth-card {
-            width: min(100%, 320px);
+            width: min(100%, 350px);
             border: 0;
             border-radius: 0;
             background: var(--auth-card-bg);
@@ -301,7 +323,7 @@
                 </div>
 
                 <div class="btn-row">
-                    <button type="submit" class="btn-step btn-send">Send Link</button>
+                    <button type="submit" class="btn-step btn-send">Reset</button>
                     <a href="{{ route('student.login') }}" class="btn-step btn-back">Back</a>
                 </div>
             </form>
