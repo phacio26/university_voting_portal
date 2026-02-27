@@ -43,7 +43,7 @@
                     <h6 class="card-title text-muted mb-2">Total Students</h6>
                     <h3 class="text-primary mb-0">{{ $stats['total_students'] }}</h3>
                 </div>
-                <i class="fas fa-users fa-2x text-primary"></i>
+                <i class="fas fa-university fa-2x text-primary"></i>
             </div>
         </div>
     </div>
@@ -55,7 +55,7 @@
                     <h6 class="card-title text-muted mb-2">Active Positions</h6>
                     <h3 class="text-success mb-0">{{ $stats['total_positions'] }}</h3>
                 </div>
-                <i class="fas fa-bullseye fa-2x text-success"></i>
+                <i class="fas fa-award fa-2x text-success"></i>
             </div>
         </div>
     </div>
@@ -67,7 +67,7 @@
                     <h6 class="card-title text-muted mb-2">Active Candidates</h6>
                     <h3 class="text-warning mb-0">{{ $stats['total_candidates'] }}</h3>
                 </div>
-                <i class="fas fa-user-friends fa-2x text-warning"></i>
+                <i class="fas fa-user-check fa-2x text-warning"></i>
             </div>
         </div>
     </div>
@@ -79,7 +79,7 @@
                     <h6 class="card-title text-muted mb-2">Active Elections</h6>
                     <h3 class="text-info mb-0">{{ $stats['active_elections'] }}</h3>
                 </div>
-                <i class="fas fa-vote-yea fa-2x text-info"></i>
+                <i class="fas fa-clipboard-list fa-2x text-info"></i>
             </div>
         </div>
     </div>
@@ -94,7 +94,7 @@
                     <h6 class="card-title text-muted mb-2">Total Votes</h6>
                     <h3 id="adminTotalVotes" class="text-danger mb-0">{{ $stats['total_votes'] ?? 0 }}</h3>
                 </div>
-                <i class="fas fa-chart-bar fa-2x text-danger"></i>
+                <i class="fas fa-chart-area fa-2x text-danger"></i>
             </div>
         </div>
     </div>
@@ -129,7 +129,7 @@
     <div class="col-lg-8 mb-3">
         <div class="card h-100">
             <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-chart-line"></i> Voting Progress</h5>
+                <h5 class="mb-0"><i class="fas fa-chart-scatter"></i> Voting Progress</h5>
             </div>
             <div class="card-body">
                 <canvas id="votingProgressChart" height="250"></canvas>
@@ -152,7 +152,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h5 class="mb-0"><i class="fas fa-binoculars"></i> Live Voting Monitor</h5>
+        <h5 class="mb-0"><i class="fas fa-radar"></i> Live Voting Monitor</h5>
     </div>
     <div class="card-body">
         @if($activeElection)
@@ -270,13 +270,13 @@
                 </div>
             @else
                 <div class="text-center py-4">
-                    <i class="fas fa-info-circle fa-2x text-muted mb-3"></i>
+                    <i class="fas fa-bell fa-2x text-muted mb-3"></i>
                     <p class="text-muted mb-0">No active race data available yet.</p>
                 </div>
             @endif
         @else
             <div class="text-center py-4">
-                <i class="fas fa-info-circle fa-2x text-muted mb-3"></i>
+                <i class="fas fa-bell fa-2x text-muted mb-3"></i>
                 <p class="text-muted mb-0"> voting progress will be displayed here when election is active</p>
             </div>
         @endif

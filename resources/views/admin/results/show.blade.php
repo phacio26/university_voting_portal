@@ -2,7 +2,7 @@
 
 @section('title', 'Election Winners')
 @section('page-title', 'Election Winners')
-@section('page-icon', 'fa-award')
+@section('page-icon', 'fa-graduation-cap')
 
 @section('styles')
 <style>
@@ -19,6 +19,14 @@
 
         .result-card h5 {
             font-size: 1rem;
+        }
+
+        .table-responsive {
+            margin: 0 -0.5rem;
+        }
+
+        .table-sm {
+            font-size: 0.85rem;
         }
 
         .table-responsive {
@@ -111,7 +119,7 @@
             <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
                 <h5 class="mb-0">{{ $position->title }}</h5>
                 @if($position->winner)
-                    <span class="badge bg-success">Winner Declared</span>
+                    <span class="badge bg-success">Winner Selected</span>
                 @elseif($position->is_tie)
                     <span class="badge bg-warning text-dark">Tie</span>
                 @else
@@ -121,13 +129,13 @@
 
             @if($position->winner)
                 <div class="alert alert-success py-2 mb-2" role="alert">
-                    <strong>{{ $position->winner->name }}</strong> won with
+                    <strong>{{ $position->winner->name }}</strong> selected with
                     {{ number_format($position->winner->votes_count) }} votes
                     ({{ number_format($position->winner->vote_percentage, 1) }}%).
                 </div>
             @elseif($position->is_tie)
                 <div class="alert alert-warning py-2 mb-2" role="alert">
-                    This position is tied. Re-vote is required or still pending for final winner declaration.
+                    This position requires a tie-break vote.
                 </div>
             @endif
 
@@ -155,6 +163,26 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="mobile-cards">
+                @forelse($position->candidates as $candidate)
+                    <div class="border rounded p-2 mb-2 bg-light">
+                        <div class="mobile-candidate-info">
+                            <strong>{{ $candidate->name }}</strong>
+                            @if($position->winner && $position->winner->id === $candidate->id)
+                                <span class="badge bg-success">Winner</span>
+                            @endif
+                        </div>
+                        <div class="mobile-votes-info">
+                            <span>{{ number_format($candidate->votes_count) }} votes</span>
+                            <span class="ms-3">{{ number_format($candidate->vote_percentage, 1) }}%</span>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-muted text-center py-2">No candidates for this position.</div>
+                @endforelse
             </div>
 
             <!-- Mobile Card View -->

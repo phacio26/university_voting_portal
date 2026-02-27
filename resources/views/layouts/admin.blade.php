@@ -27,7 +27,7 @@
         <div class="page-nav-loader__bar"></div>
         <div class="page-nav-loader__label">
             <i class="fas fa-circle-notch fa-spin"></i>
-            <span>Loading page...</span>
+            <span>Preparing dashboard...</span>
         </div>
     </div>
 
@@ -36,17 +36,17 @@
         <nav class="admin-sidebar" id="adminSidebar">
             <div class="sidebar-header">
                 <div class="brand-logo">
-                    <i class="fas fa-user-shield"></i>
+                    <i class="fas fa-shield-alt"></i>
                 </div>
-                <h5>Admin Panel</h5>
+                <h5>Election Control</h5>
             </div>
             
             <ul class="sidebar-nav">
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" 
                        href="{{ route('admin.dashboard') }}">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Dashboard</span>
+                        <i class="fas fa-home"></i>
+                        <span>Overview</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -66,14 +66,14 @@
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('admin.candidates.*') ? 'active' : '' }}" 
                        href="{{ route('admin.candidates.index') }}">
-                        <i class="fas fa-users"></i>
+                        <i class="fas fa-user-graduate"></i>
                         <span>Candidates</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('admin.results.*') ? 'active' : '' }}"
                        href="{{ route('admin.results.index') }}">
-                        <i class="fas fa-trophy"></i>
+                        <i class="fas fa-graduation-cap"></i>
                         <span>Results</span>
                     </a>
                 </li>
@@ -111,7 +111,7 @@
                                 <span id="current-time"></span>
                                 <small class="text-muted ms-1">(Malawi Time)</small>
                                 <span class="mx-2">|</span>
-                                <i class="fas fa-user me-1"></i>
+                                <i class="fas fa-id-card me-1"></i>
                                 <span>{{ Auth::guard('admin')->user()->name }}</span>
                             </div>
                         </div>
@@ -124,7 +124,7 @@
                 <div class="container-fluid py-4">
                     @if(session('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <i class="fas fa-check-circle me-2"></i>
+                            <i class="fas fa-check-double me-1"></i>
                             {{ session('success') }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>

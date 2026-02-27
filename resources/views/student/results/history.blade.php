@@ -28,7 +28,7 @@
         <p class="portal-muted mb-0">Browse completed elections and published outcomes.</p>
     </div>
     <a href="{{ route('student.results.index') }}" class="btn btn-outline-primary">
-        <i class="fas fa-chart-line me-2"></i>Current Results
+        <i class="fas fa-signal me-2"></i>Current Results
     </a>
 </div>
 

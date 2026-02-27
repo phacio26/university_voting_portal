@@ -162,7 +162,7 @@
 <div class="results-hero mb-3">
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
         <div>
-            <span class="hero-pill"><i class="fas fa-check-circle"></i>Results Published</span>
+            <span class="hero-pill"><i class="fas fa-check-double"></i>Results Published</span>
             <h1 class="portal-heading h3 mb-1 mt-2">{{ $election->title }}</h1>
             <p class="portal-muted mb-0">{{ $election->start_time->format('M j, Y g:i A') }} to {{ $election->end_time->format('M j, Y g:i A') }}</p>
         </div>

@@ -299,7 +299,7 @@
                             required
                             placeholder="Full name"
                         >
-                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <span class="input-group-text"><i class="fas fa-user-graduate"></i></span>
                     </div>
                     @error('name')
                         <div class="invalid-feedback d-block">{{ $message }}</div>

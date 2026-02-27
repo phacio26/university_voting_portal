@@ -133,7 +133,7 @@
 
                                         @if(!$period->is_revote && $period->end_time->lt(now()))
                                             <a href="{{ route('admin.results.show', $period) }}" class="btn btn-outline-success" title="View results" aria-label="View results for {{ $period->title }}">
-                                                <i class="fas fa-trophy"></i>
+                                                <i class="fas fa-graduation-cap"></i>
                                             </a>
                                         @endif
 

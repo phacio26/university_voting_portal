@@ -26,7 +26,7 @@
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <p class="mt-3">Loading Student Portal...</p>
+            <p class="mt-3">Accessing student portal...</p>
         </div>
     </div>
 
@@ -34,8 +34,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark student-navbar">
         <div class="container">
             <a class="navbar-brand" href="{{ route('student.dashboard') }}">
-                <i class="fas fa-vote-yea me-2"></i>
-                <span class="brand-text">University Voting</span>
+                <i class="fas fa-ballot-check me-2"></i>
+                <span class="brand-text">Student Voting</span>
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -46,12 +46,12 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('student.dashboard') }}">
-                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                            <i class="fas fa-home me-1"></i>Overview
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('student.results.index') }}">
-                            <i class="fas fa-chart-bar me-1"></i>Results
+                            <i class="fas fa-chart-simple me-1"></i>Results
                         </a>
                     </li>
                 </ul>
@@ -59,7 +59,7 @@
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-1"></i>{{ Auth::guard('student')->user()->name }}
+                            <i class="fas fa-id-card me-1"></i>{{ Auth::guard('student')->user()->name }}
                         </a>
                         <ul class="dropdown-menu">
                             <li>
@@ -89,7 +89,7 @@
         <div class="container-fluid py-4">
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle me-2"></i>
+                    <i class="fas fa-check-double me-2"></i>
                     {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>

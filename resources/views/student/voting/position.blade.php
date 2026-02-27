@@ -225,17 +225,17 @@
 <div class="portal-card p-3 p-md-4">
     @if($hasVotedForPosition)
         <div class="alert alert-success">
-            Your choice for this position is saved. You can still update it before submitting.
+            Your selection is saved. You can change it before final submission.
         </div>
     @endif
 
     @if($candidates->isEmpty())
-        <div class="alert alert-warning mb-0">No candidates available for this position.</div>
+        <div class="alert alert-warning mb-0">No candidates listed for this position.</div>
     @else
         <form id="voteForm" method="POST" action="{{ route('student.voting.vote.position', $position) }}">
             @csrf
             <div id="voteRequiredHint" class="alert alert-danger d-none vote-required-hint" role="alert">
-                Please select one candidate to continue.
+                Select a candidate to continue.
             </div>
             <div class="row g-4 mb-4">
                 @foreach($candidates as $candidate)
@@ -338,9 +338,9 @@
                     return;
                 }
 
-                alert(data.error || 'Could not save your choice right now.');
+                alert(data.error || 'Unable to save selection.');
             } catch (error) {
-                alert('Connection issue. Please try again.');
+                alert('Network issue. Try again.');
             }
 
             voteButton.disabled = false;

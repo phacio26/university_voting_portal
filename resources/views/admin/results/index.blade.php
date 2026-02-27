@@ -2,7 +2,7 @@
 
 @section('title', 'Election Results')
 @section('page-title', 'Election Results')
-@section('page-icon', 'fa-trophy')
+@section('page-icon', 'fa-graduation-cap')
 
 @section('styles')
 <style>
@@ -22,10 +22,10 @@
                 <table class="table table-hover align-middle">
                     <thead>
                         <tr>
-                            <th>Election</th>
-                            <th>Ended</th>
-                            <th>Resolution Status</th>
-                            <th>Student Visibility</th>
+                            <th>Election Title</th>
+                            <th>Completion Date</th>
+                            <th>Status</th>
+                            <th>Visibility</th>
                             <th class="text-end">Action</th>
                         </tr>
                     </thead>
@@ -41,21 +41,21 @@
                                 <td>{{ $election->end_time->format('M j, Y g:i A') }}</td>
                                 <td>
                                     @if($election->pending_resolution)
-                                        <span class="badge bg-warning text-dark">Pending Re-vote/Tie</span>
+                                        <span class="badge bg-warning text-dark">Tie-break Required</span>
                                     @else
-                                        <span class="badge bg-success">Resolved</span>
+                                        <span class="badge bg-success">Finalized</span>
                                     @endif
                                 </td>
                                 <td>
                                     @if($election->results_visible_to_students)
-                                        <span class="badge bg-info">Published</span>
+                                        <span class="badge bg-info">Public</span>
                                     @else
-                                        <span class="badge bg-secondary">Admin Only</span>
+                                        <span class="badge bg-secondary">Private</span>
                                     @endif
                                 </td>
                                 <td class="text-end">
                                     <a href="{{ route('admin.results.show', $election) }}" class="btn btn-outline-primary btn-sm">
-                                        <i class="fas fa-eye me-1"></i>View Winners
+                                        <i class="fas fa-trophy me-1"></i>Results
                                     </a>
                                 </td>
                             </tr>
@@ -74,17 +74,17 @@
                                     <div class="small text-muted">Ended: {{ $election->end_time->format('M j, Y g:i A') }}</div>
                                 </div>
                                 @if($election->pending_resolution)
-                                    <span class="badge bg-warning text-dark">Pending</span>
+                                    <span class="badge bg-warning text-dark">Tie-break</span>
                                 @else
-                                    <span class="badge bg-success">Resolved</span>
+                                    <span class="badge bg-success">Finalized</span>
                                 @endif
                             </div>
 
                             <div class="small mb-2">
                                 @if($election->results_visible_to_students)
-                                    <span class="badge bg-info">Published</span>
+                                    <span class="badge bg-info">Public</span>
                                 @else
-                                    <span class="badge bg-secondary">Admin Only</span>
+                                    <span class="badge bg-secondary">Private</span>
                                 @endif
                             </div>
 
@@ -93,7 +93,7 @@
                             @endif
 
                             <a href="{{ route('admin.results.show', $election) }}" class="btn btn-outline-primary btn-sm w-100">
-                                <i class="fas fa-eye me-1"></i>View Winners
+                                <i class="fas fa-trophy me-1"></i>Results
                             </a>
                         </div>
                     @endforeach
@@ -101,13 +101,13 @@
             </div>
 
             <div class="mt-3">
-                {{ $elections->links() }}
+                {{ $elections->links('vendor.pagination.simple') }}
             </div>
         @else
             <div class="text-center py-5">
-                <i class="fas fa-chart-bar fa-3x text-muted mb-3"></i>
-                <h5 class="text-muted">No Closed Elections Yet</h5>
-                <p class="text-muted mb-0">Results will appear here after an election closes.</p>
+                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No Results to Display</h5>
+                <p class="text-muted mb-0">Completed elections will appear here.</p>
             </div>
         @endif
     </div>

@@ -29,15 +29,15 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
     <div>
-        <h1 class="h4 portal-heading mb-1">Review Your Vote</h1>
-        <p class="portal-muted mb-0">Review your choices before submitting your vote.</p>
+        <h1 class="h4 portal-heading mb-1">Confirm Selections</h1>
+        <p class="portal-muted mb-0">Check your choices before final submission.</p>
     </div>
 </div>
 
 <div class="portal-card p-3 p-md-4">
     @if(empty($voteDetails))
         <div class="alert alert-warning mb-0">
-            No choices saved yet. <a href="{{ route('student.voting.start') }}">Start voting</a>.
+            No selections made. <a href="{{ route('student.voting.start') }}">Begin voting</a>.
         </div>
     @else
         <div class="row g-3 mb-3">
@@ -45,9 +45,9 @@
                 <div class="col-md-6">
                     <div class="portal-card p-3 h-100">
                         <small class="text-muted d-block mb-1">{{ $vote['position']->title }}</small>
-                        <div class="fw-semibold mb-2">{{ $vote['candidate']->name ?? 'Unknown candidate' }}</div>
+                        <div class="fw-semibold mb-2">{{ $vote['candidate']->name ?? 'Candidate not specified' }}</div>
                         <a href="{{ route('student.voting.position', $vote['position']) }}" class="btn btn-outline-primary btn-sm">
-                            Change Choice
+                            Change
                         </a>
                     </div>
                 </div>

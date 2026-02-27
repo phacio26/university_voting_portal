@@ -59,7 +59,7 @@
 <body>
     <div class="header">
         <h1 style="color: #28a745; margin-bottom: 10px;">
-            <i class="fas fa-trophy"></i> Election Results
+            <i class="fas fa-graduation-cap"></i> Election Results
         </h1>
         <h2 style="margin-bottom: 5px;">{{ $election->title }}</h2>
         <p style="margin-bottom: 5px;">

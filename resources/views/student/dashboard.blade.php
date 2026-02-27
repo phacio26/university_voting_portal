@@ -251,10 +251,10 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
     <div>
-        <h1 class="portal-heading h3 mb-1">Welcome, {{ $student->name }}</h1>
+        <h1 class="portal-heading h3 mb-1">{{ $student->name }}</h1>
         <div class="vote-note-card">
             <i class="fas fa-bullhorn"></i>
-            <span>Your vote matters, Make it count!!.</span>
+            <span>Your voice shapes our future.</span>
         </div>
     </div>
 </div>
@@ -342,29 +342,29 @@
                 @if($activeElection->is_revote)
                     @if($revoteCanVote)
                         <div class="alert alert-warning mb-0">
-                            <strong>Tie-break round in progress:</strong>
+                            <strong>Tie-break voting:</strong>
                             A tie was recorded in
                             <strong>{{ $activeElection->positions->pluck('title')->implode(', ') ?: 'selected positions' }}</strong>,
-                            so this round is only for the tied position(s).
+                            so a new voting round is open for these positions only.
                             <br>
                             <span class="small">
-                                Tie-break window: {{ $activeElection->start_time->format('M j, Y g:i A') }} to {{ $activeElection->end_time->format('M j, Y g:i A') }}.
+                                Closes: {{ $activeElection->end_time->format('M j, Y g:i A') }}.
                             </span>
-                            Tie-break voting is open. Please submit your  Vote before the closing time above.
+                            Cast your vote before the deadline.
                         </div>
                     @else
                         <div class="alert alert-success mb-0 js-revote-thanks">
-                            <strong>Thank you for voting in the tie-break round.</strong>
+                            <strong>Tie-break vote received.</strong>
                             Your vote has been recorded.
                         </div>
                     @endif
                 @elseif($hasVoted && !$activeElection->hasEnded() && !$activeElection->results_available)
                     <div class="alert alert-success mb-0 js-vote-submitted" data-election-id="{{ $activeElection->id }}">
-                        <strong>Vote submitted.</strong> Your vote has been recorded.
+                        <strong>Vote received.</strong> Your selection has been saved.
                     </div>
                 @elseif($canVote)
                     <a class="btn btn-primary" href="{{ route('student.voting.index') }}">
-                        <i class="fas fa-check-to-slot me-2"></i> Cast Vote
+                        <i class="fas fa-vote-yea me-2"></i> Cast Vote
                     </a>
                 @elseif(isset($revoteElection) && $revoteElection)
                     <div class="alert alert-warning mb-0">
@@ -378,10 +378,10 @@
                         @endif
                     </div>
                 @elseif($activeElection->hasEnded())
-                    <div class="alert alert-warning mb-0">Voting has ended for this election.</div>
+                    <div class="alert alert-warning mb-0">Voting period has ended.</div>
                 @else
                     <div>
-                        <div class="alert alert-info mb-0">Voting opens on {{ $activeElection->start_time->format('M j, Y g:i A') }}.</div>
+                        <div class="alert alert-info mb-0">Voting opens {{ $activeElection->start_time->format('M j, Y g:i A') }}.</div>
                         <div class="upcoming-progress-wrap">
                             <div class="progress">
                                 <div class="progress-bar" role="progressbar" aria-label="Upcoming election progress"></div>
@@ -399,8 +399,8 @@
                     @if(isset($nextElection) && $nextElection)
                         <div id="nextElectionAlert">
                             <div class="alert alert-info mb-0">
-                                Voting opens on {{ $nextElection->start_time->format('M j, Y g:i A') }}.
-                                <span class="ms-2">Starting in <strong id="voteCountdown">--:--:--</strong></span>
+                                Voting opens {{ $nextElection->start_time->format('M j, Y g:i A') }}.
+                                <span class="ms-2">Begins in <strong id="voteCountdown">--:--:--</strong></span>
                             </div>
                             <div class="upcoming-progress-wrap">
                                 <div class="progress">
@@ -409,7 +409,7 @@
                             </div>
                         </div>
                     @else
-                        <div id="noActiveElectionAlert" class="alert alert-warning mb-0">No election is scheduled right now.</div>
+                        <div id="noActiveElectionAlert" class="alert alert-warning mb-0">No elections scheduled at this time.</div>
                     @endif
                 </div>
             @endif
@@ -424,10 +424,10 @@
                 </a>
                 <div class="quick-links-row">
                     <a class="btn btn-outline-primary btn-sm" href="{{ route('student.results.index') }}">
-                        <i class="fas fa-chart-column me-1"></i>View Results
+                        <i class="fas fa-chart-simple me-1"></i>View Results
                     </a>
                     <a class="btn btn-outline-secondary btn-sm" href="{{ route('student.results.history') }}">
-                        <i class="fas fa-clock-rotate-left me-1"></i>Election History
+                        <i class="fas fa-history me-1"></i>Election History
                     </a>
                 </div>
             </div>

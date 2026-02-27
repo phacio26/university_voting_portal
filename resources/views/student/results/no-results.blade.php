@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="portal-card p-4 p-md-5 text-center">
-    <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+    <i class="fas fa-signal fa-3x text-muted mb-3"></i>
     <h1 class="h4 portal-heading mb-2">No Published Results Yet</h1>
     <p class="portal-muted mb-4">
         Results will be visible only after the election process is fully completed and finalized.

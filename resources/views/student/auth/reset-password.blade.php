@@ -314,18 +314,6 @@
                             name="password"
                             required
                             placeholder="New password"
-                            minlength="8"
-                            maxlength="8"
-                            pattern="[A-Za-z\d]{8}"
-                            title="Password must be exactly 8 characters long with letters and numbers only"
-                        >
-                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                    </div>
-                    @error('password')
-                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                    @enderror
-                    <div class="password-strength mt-2">
-                        <div class="progress" style="height: 4px;">
                             <div class="progress-bar" id="password-strength-bar" role="progressbar" style="width: 0%;"></div>
                         </div>
                         <small class="text-muted" id="password-strength-text">Password strength:</small>
@@ -342,7 +330,7 @@
                             required
                             placeholder="Confirm password"
                         >
-                        <span class="input-group-text"><i class="fas fa-check"></i></span>
+                        <span class="input-group-text"><i class="fas fa-check-double"></i></span>
                     </div>
                     @error('password_confirmation')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
